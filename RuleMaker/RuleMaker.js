@@ -2,7 +2,6 @@ const debugMode = true
 const
     icon = {
         srt: "https://ablecats.github.io/icon/SRT.jpg",
-        quan: "https://ablecats.github.io/icon/QUAN.jpg",
         surge: "https://ablecats.github.io/icon/Surge.jpg"
     },
     SCW = $device.info.screen.width,
@@ -74,7 +73,7 @@ const
                                 }
                             })
                         }
-                        $("bgimage").src == icon.surge ? $share.sheet(["lhie1.conf", $data({ "string": MRule })]) : srt();
+                        Rule.ss ? srt() : $share.sheet(["lhie1.conf", $data({ "string": MRule })]);
                     }
                 }
             }, {
@@ -99,13 +98,15 @@ const
                         layout: function (make, view) {
                             make.top.right.bottom.inset(0)
                         },
-                        changed: function (sender) {
-                            sender.on ? $ui.menu({
-                                items: ["代理", "直连"],
-                                handler: function (title, idx) {
-                                    MRule = MRule.replace(/(USER-AGENT,YouTube*,|DOMAIN-SUFFIX,youtube.com,|DOMAIN-SUFFIX,youtube-nocookie.com,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
-                                }
-                            }) : 0
+                        events: {
+                            changed: function (sender) {
+                                sender.on ? $ui.menu({
+                                    items: ["代理", "直连"],
+                                    handler: function (title, idx) {
+                                        MRule = MRule.replace(/(USER-AGENT,YouTube*,|DOMAIN-SUFFIX,youtube.com,|DOMAIN-SUFFIX,youtube-nocookie.com,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
+                                    }
+                                }) : 0
+                            }
                         }
                     }, {
                         type: "label",
@@ -135,13 +136,15 @@ const
                         layout: function (make, view) {
                             make.top.right.bottom.inset(0)
                         },
-                        changed: function (sender) {
-                            sender.on ? $ui.menu({
-                                items: ["代理", "直连"],
-                                handler: function (title, idx) {
-                                    MRule = MRule.replace(/(DOMAIN-KEYWORD,google,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
-                                }
-                            }) : 0
+                        events: {
+                            changed: function (sender) {
+                                sender.on ? $ui.menu({
+                                    items: ["代理", "直连"],
+                                    handler: function (title, idx) {
+                                        MRule = MRule.replace(/(DOMAIN-KEYWORD,google,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
+                                    }
+                                }) : 0
+                            }
                         }
                     }, {
                         type: "label",
@@ -171,13 +174,15 @@ const
                         layout: function (make, view) {
                             make.top.right.bottom.inset(0)
                         },
-                        changed: function (sender) {
-                            sender.on ? $ui.menu({
-                                items: ["代理", "直连"],
-                                handler: function (title, idx) {
-                                    MRule = MRule.replace(/(USER-AGENT,Argo\*,|DOMAIN-SUFFIX,netflix.com,|DOMAIN-SUFFIX,netflix.net,|DOMAIN-SUFFIX,nflxext.com,|DOMAIN-SUFFIX,nflximg.com,|DOMAIN-SUFFIX,nflximg.net,|DOMAIN-SUFFIX,nflxvideo.net,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
-                                }
-                            }) : 0
+                        events: {
+                            changed: function (sender) {
+                                sender.on ? $ui.menu({
+                                    items: ["代理", "直连"],
+                                    handler: function (title, idx) {
+                                        MRule = MRule.replace(/(USER-AGENT,Argo\*,|DOMAIN-SUFFIX,netflix.com,|DOMAIN-SUFFIX,netflix.net,|DOMAIN-SUFFIX,nflxext.com,|DOMAIN-SUFFIX,nflximg.com,|DOMAIN-SUFFIX,nflximg.net,|DOMAIN-SUFFIX,nflxvideo.net,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
+                                    }
+                                }) : 0
+                            }
                         }
                     }, {
                         type: "label",
@@ -207,13 +212,15 @@ const
                         layout: function (make, view) {
                             make.top.right.bottom.inset(0)
                         },
-                        changed: function (sender) {
-                            sender.on ? $ui.menu({
-                                items: ["代理", "直连"],
-                                handler: function (title, idx) {
-                                    MRule = MRule.replace(/(DOMAIN-SUFFIX,spoti.fi,|DOMAIN-KEYWORD,spotify,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
-                                }
-                            }) : 0
+                        events: {
+                            changed: function (sender) {
+                                sender ? $ui.menu({
+                                    items: ["代理", "直连"],
+                                    handler: function (title, idx) {
+                                        MRule = MRule.replace(/(DOMAIN-SUFFIX,spoti.fi,|DOMAIN-KEYWORD,spotify,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
+                                    }
+                                }) : 0
+                            }
                         }
                     }, {
                         type: "label",
@@ -243,13 +250,15 @@ const
                         layout: function (make, view) {
                             make.top.right.bottom.inset(0)
                         },
-                        changed: function (sender) {
-                            sender.on ? $ui.menu({
-                                items: ["代理", "直连"],
-                                handler: function (title, idx) {
-                                    MRule = MRule.replace(/(DOMAIN-KEYWORD,nowtv100,|DOMAIN-KEYWORD,rthklive,|DOMAIN-SUFFIX,mytvsuper.com,|DOMAIN-SUFFIX,tvb.com,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
-                                }
-                            }) : 0
+                        events: {
+                            changed: function (sender) {
+                                sender.on ? $ui.menu({
+                                    items: ["代理", "直连"],
+                                    handler: function (title, idx) {
+                                        MRule = MRule.replace(/(DOMAIN-KEYWORD,nowtv100,|DOMAIN-KEYWORD,rthklive,|DOMAIN-SUFFIX,mytvsuper.com,|DOMAIN-SUFFIX,tvb.com,)[^,]+/g, idx ? "DIRECT" : "🍃 Proxy")
+                                    }
+                                }) : 0
+                            }
                         }
                     }, {
                         type: "label",
@@ -491,7 +500,7 @@ const
                                 $("HostsView").relayout()
                             },
                             completion: function () {
-                                $("bgimage").src == icon.surge ? $ui.animate({
+                                !Rule.ss ? $ui.animate({
                                     duration: 0.4,
                                     animation: function () {
                                         $("MiTMView").updateLayout(function (make) {
@@ -660,6 +669,7 @@ var
         Header: "https://raw.githubusercontent.com/lhie1/Surge/master/Shadowrocket/General.conf",
     },
     Rule = {
+        ss: null,
         Apple: "https://raw.githubusercontent.com/lhie1/Surge/master/Auto/Apple.conf",
         DIRECT: "https://raw.githubusercontent.com/lhie1/Surge/master/Auto/DIRECT.conf",
         PROXY: "https://raw.githubusercontent.com/lhie1/Surge/master/Auto/PROXY.conf",
@@ -721,13 +731,15 @@ async function initRuleMaker() {
                 handler: function (title, idx) {
                     switch (idx) {
                         case 2:
-                            $("bgimage").src = icon.srt;
+                            Rule.ss = true;
                             MRule = Srt.Header + MRule;
+                            $("bgimage").src = icon.srt;
                             break;
                         default:
-                            $ui.toast("你选择了 " + title)
+                            Rule.ss = false;
+                            $ui.toast("你选择了 " + title);
                             MRule = Surge.Header + Surge.Groups + MRule;
-                            MRule = idx ? MRule.replace(/,REJECT/g, ",REJECT-TINYGIF") : MRule.replace(/,dns-failed/g, "")
+                            MRule = idx ? MRule.replace(/,REJECT/g, ",REJECT-TINYGIF") : MRule.replace(/,dns-failed/g, "");
                             break;
                     }
                 },
@@ -820,4 +832,3 @@ function exit(sec, title) {
 
 initUi()
 $app.autoKeyboardEnabled = true
-
