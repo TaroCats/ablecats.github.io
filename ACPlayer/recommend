@@ -1,0 +1,9 @@
+{
+    plistId: 497665100,
+    plistImg: {
+      src: 'http://ablecats.github.io/ACP/AbleCats',
+    },
+    plistName: {
+      text: 'AbleCats'
+    }
+ }
