@@ -7,3 +7,6 @@ var bgImageView = {
     layout: $layout.fill,
 }
 
+function bgImageView (){
+    return bgImageView;
+}
