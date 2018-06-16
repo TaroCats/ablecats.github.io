@@ -898,6 +898,6 @@ function exit() {
 }
 
 module.exports = {
-    init: eval.init,
-    exit: eval.exit,
+    init: init,
+    exit: exit,
 }
