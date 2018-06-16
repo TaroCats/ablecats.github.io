@@ -846,8 +846,12 @@ const listView = {
     layout: $layout.fill,
 }
 
+const views = {
+    play:[bgImageView, bgimgBlurView, searchView, donateView],
+    list:[listView]
+}
 
 module.exports = {
-    play: () => {return [bgImageView, bgimgBlurView, searchView, donateView]},
-    list: () => {return [listView]},
+    play: views.play,
+    list: views.list
 }
