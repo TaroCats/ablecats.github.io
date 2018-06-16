@@ -850,14 +850,3 @@ const views = {
     play:[bgImageView, bgimgBlurView, searchView, donateView],
     list:[listView]
 }
-
-function init(){
-    console.open()
-    console.log([bgImageView, bgimgBlurView, searchView, donateView])
-}
-
-module.exports = {
-    init: init,
-    play: views.play,
-    list: views.list
-}
