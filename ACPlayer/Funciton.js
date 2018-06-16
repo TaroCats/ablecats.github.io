@@ -1,10 +1,3 @@
-const file = require('scripts/files');
-const deal = require('scripts/deals');
-const donate = require('scripts/donate');
-const control = require('scripts/control');
-const loading = require('scripts/loadingPatch');
-const Animation = require('scripts/viewsWithAnimation');
-
 const bgImageView = {
     type: "image",
     props: {
