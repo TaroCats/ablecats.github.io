@@ -1,6 +1,5 @@
 var platform = null;
 const debug = !true;
-const isToday = $app.env == $env.today || $app.env == $env.keyboard ? true : false;
 
 const file = require('scripts/files');
 const deal = require('scripts/deals');
