@@ -845,3 +845,54 @@ const listView = {
     },
     layout: $layout.fill,
 }
+
+function init() {
+    return () => {
+        $ui.render({
+            props: {
+                id: "MainView",
+                navBarHidden: true
+            },
+            views: [{
+                type: "view",
+                props: {
+                    id: "playControl"
+                },
+                layout: function (make, view) {
+                    make.top.left.right.inset(0);
+                    isToday ? make.bottom.inset(0) : make.height.equalTo(view.super.height).multipliedBy(0.41);
+                },
+                views: [bgImageView, bgimgBlurView, searchView, donateView]
+            }, {
+                type: "blur",
+                props: {
+                    style: 1,
+                    smoothRadius: 10,
+                    id: "listControl",
+                    alpha: isToday ? 0 : 1,
+                },
+                layout: function (make, view) {
+                    if (isToday) {
+                        make.right.inset(20);
+                        make.centerY.equalTo(view.super);
+                        make.width.equalTo($("lrcView"));
+                        make.height.equalTo($("albumimg"));
+                    } else {
+                        let height = view.super.height;
+                        make.left.right.bottom.inset(0);
+                        make.top.equalTo(view.prev.bottom);
+                        make.height.equalTo(height).multipliedBy(0.6);
+                    }
+                },
+                views: [listView]
+            }]
+        })
+        deal.search(null, 0)
+    }
+}
+
+function exit() {
+    return () => {
+        control.killTimer()
+    }
+}
