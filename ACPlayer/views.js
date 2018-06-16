@@ -1,4 +1,4 @@
-const bgImageView = {
+var bgImageView = {
     type: "image",
     props: {
         id: "bgimg",
@@ -7,6 +7,3 @@ const bgImageView = {
     layout: $layout.fill,
 }
 
-function bgImageView（）{
-    return bgImageView;
-}
