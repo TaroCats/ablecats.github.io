@@ -896,3 +896,8 @@ function exit() {
         control.killTimer()
     }
 }
+
+module.exports = {
+    init: eval.init,
+    exit: eval.exit,
+}
