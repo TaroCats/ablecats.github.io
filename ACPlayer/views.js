@@ -6,3 +6,7 @@ const bgImageView = {
     },
     layout: $layout.fill,
 }
+
+function bgImageView（）{
+    return bgImageView;
+}
