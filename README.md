@@ -8,3 +8,5 @@ This is the Repo for the AbleCats release resource
 - 引入在线更新机制
 
 [下载脚本](https://aff.mx/Ny1Wi)
+
+## Future, Add More
