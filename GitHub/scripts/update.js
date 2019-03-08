@@ -9,6 +9,7 @@ async function checkVersion() {
 }
 
 async function update() {
+    console.log("update Check!");
     let log = await checkLog();
     let res = await checkVersion();
 
