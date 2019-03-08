@@ -9,6 +9,8 @@ async function update() {
         let fileData = $file.read("Version");
         if (fileData.string) {
             let file = JSON.parse(fileData.string);
+            console.log(file.md5);
+            console.log(res.data);
             console.log(`New Update Check : ${file.md5 != res.data}`);
             if (file.md5 != res.data) foundNewVer();
         }
