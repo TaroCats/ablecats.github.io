@@ -666,11 +666,13 @@ async function init() {
   });
 
   let flag = await git.tokenCheck($("Login").alpha ? lottie.fill : lottie.wait);
-  animationOfLogin(flag ? 0 : 1);
-
-  lottie.lottieStop();
-  news = await git.folderCheck();
-  if (news.length) folderTipsFlsh();
+  if (flag) {
+    animationOfLogin(0);
+    lottie.lottieStop();
+    news = await git.folderCheck();
+    if (news.length) folderTipsFlsh();
+  }
+  else animationOfLogin(1);
 
   return flag;
 }
