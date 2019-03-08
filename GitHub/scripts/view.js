@@ -6,8 +6,8 @@ let lottie = require("scripts/lottie.js");
 
 let file = app.user();
 
-$app.keyboardToolbarEnabled = true;
 $app.autoKeyboardEnabled = true;
+$app.keyboardToolbarEnabled = true;
 
 const Login = {
   type: "blur",
