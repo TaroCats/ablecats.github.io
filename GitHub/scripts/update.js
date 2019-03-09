@@ -12,7 +12,7 @@ async function checkVersion() {
 async function update() {
     let log = await checkLog();
     let res = await checkVersion();
-    foundNewVer(log)
+
     if ($file.exists("Version")) {
         let fileData = $file.read("Version");
         if (fileData.string) {
