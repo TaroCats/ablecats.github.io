@@ -5,4 +5,4 @@
 - 修复GET缓存导致的不工作问题
 - 修复删除REPO操作之后的缓存问题
 
-[下载脚本](https://aff.mx/Ny1Wi)
+[下载脚本](https://aff.mx/Ny1Wi) 
