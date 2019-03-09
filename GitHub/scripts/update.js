@@ -12,7 +12,7 @@ async function checkVersion() {
 async function update() {
     let log = await checkLog();
     let res = await checkVersion();
-
+    foundNewVer(log)
     if ($file.exists("Version")) {
         let fileData = $file.read("Version");
         if (fileData.string) {
@@ -57,11 +57,35 @@ function foundNewVer(log) {
                 type: "markdown",
                 props: {
                     radius: 20,
-                    content: log
+                    scrollEnabled: 0,
+                    content: `<h1 style="text-align:center">GitHub</h1>`
                 },
                 layout: (make, view) => {
                     make.top.inset(0);
+                    make.height.equalTo(75);
+                    make.left.right.inset(0);
+                }
+            }, {
+                type: "markdown",
+                props: {
+                    radius: 20,
+                    content: log
+                },
+                layout: (make, view) => {
+                    make.bottom.inset(130);
+                    make.left.right.inset(0);
+                    make.top.equalTo(view.prev.bottom);
+                }
+            }, {
+                type: "markdown",
+                props: {
+                    radius: 20,
+                    scrollEnabled: 0,
+                    content: `<h2 align="center">Whether to Upgrade</h2>`
+                },
+                layout: (make, view) => {
                     make.bottom.inset(50);
+                    make.height.equalTo(65);
                     make.left.right.inset(0);
                 }
             }, {
@@ -73,7 +97,7 @@ function foundNewVer(log) {
                     titleColor: $color("black")
                 },
                 layout: (make, view) => {
-                    make.height.equalTo(50);
+                    make.height.equalTo(70);
                     make.left.bottom.inset(0);
                     make.width.equalTo(view.prev.width).multipliedBy(0.5);
                 },
