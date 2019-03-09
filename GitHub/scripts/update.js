@@ -1,15 +1,14 @@
 async function checkLog() {
-    let res = await $http.get("https://ablecats.github.io/Releases/GitHubLog");
+    let res = await $http.get(`https://ablecats.github.io/Releases/GitHubLog?t=${date()}`);
     return res.data
 }
 
 async function checkVersion() {
-    let res = await $http.get("https://ablecats.github.io/Releases/GitHubVersion");
+    let res = await $http.get(`https://ablecats.github.io/Releases/GitHubVersion?t=${date()}`);
     return res.data
 }
 
 async function update() {
-    console.log("update Check!");
     let log = await checkLog();
     let res = await checkVersion();
 
@@ -17,8 +16,6 @@ async function update() {
         let fileData = $file.read("Version");
         if (fileData.string) {
             let file = JSON.parse(fileData.string);
-            console.log(file.md5);
-            console.log(res.data);
             console.log(`New Update Check : ${file.md5 != res.data}`);
             if (file.md5 != res.data) foundNewVer(log);
         }
@@ -168,7 +165,9 @@ function shadows(view) {
             .invoke("CGColor")
     );
 }
-
+function date() {
+    return new Date().getTime();
+}
 module.exports = {
     update: update,
 };

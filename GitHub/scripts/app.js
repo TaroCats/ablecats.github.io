@@ -55,9 +55,13 @@ class github {
     return `https://github.com/${this.file.user}/${P}/archive/master.zip`;
   }
 
+  date() {
+    return new Date().getTime();
+  }
+
   body(u, m, b) {
     return {
-      url: u,
+      url: m == "GET" ? u + `?t=${this.date()}` : u,
       body: b ? b : {},
       method: m ? m : "GET",
       header: {

@@ -1,6 +1,7 @@
 <h1 style="text-align:center">GitHub</h1>
-- 1903091620
+- 1903091631
 
 - 新增功能(删除REPO操作)
+- 修复GET缓存导致的不工作问题
 
 <h2 style="text-align:center">Whether to Upgrade</h2>
