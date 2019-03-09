@@ -462,6 +462,8 @@ const Delete = [
                       git.log(`Repos (${$("deleteReposName").text}) is Delete Successful!`);
                       animationOfROView(0, () => {
                         $("ROGV").remove();
+                        let file = app.user();
+                        app.user(file.user, file.token, "");
                         $ui.alert({ title: "Successful" });
                         $("reposBtn").title = "Choose Repo";
                       });
