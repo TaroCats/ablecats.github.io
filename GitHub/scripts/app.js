@@ -40,9 +40,9 @@ class github {
     d ? log.logs.unshift(`${date}: ${d}`) : 0;
     $("logs")
       ? $("logs").insert({
-          indexPath: $indexPath(0, log.logs.lenght),
-          value: `${date}: ${d}`
-        })
+        indexPath: $indexPath(0, log.logs.lenght),
+        value: `${date}: ${d}`
+      })
       : 0;
     this.setLog(log);
   }
@@ -90,7 +90,7 @@ class github {
   async check(P, F) {
     let data = await this.requets(
       `https://api.github.com/repos/${this.file.user}/${P}/contents/${
-        F ? F : ""
+      F ? F : ""
       }`
     );
     return data;
@@ -199,7 +199,7 @@ class github {
 
   async tokenCheck(handler) {
     handler();
-    if(!this.file.user) return false;
+    if (!this.file.user) return false;
     let data = await this.requets(`${host}/${this.file.user}`);
     let flag = data.login == this.file.user ? true : false;
     this.log(`${this.file.user} login ${flag ? "succese" : "faled"}`);
@@ -326,6 +326,14 @@ class github {
       "https://api.github.com/user/repos",
       "POST",
       body
+    );
+    return res;
+  }
+
+  async deleteRepos(repos) {
+    let res = await this.requets(
+      `https://api.github.com/repos/${this.file.user}/${repos}`,
+      "DELETE"
     );
     return res;
   }

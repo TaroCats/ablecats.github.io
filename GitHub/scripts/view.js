@@ -425,7 +425,7 @@ const RO = {
       events: {
         tapped: async sender => {
           animationOfROView(1);
-          viewAddNewItem(item.future);
+          viewAddNewItem(item.delete);
         }
       }
     },
@@ -671,8 +671,8 @@ async function init() {
   if (flag) {
     animationOfLogin(0);
     lottie.lottieStop();
-    news = await git.folderCheck();
-    if (news.length) folderTipsFlsh();
+    // news = await git.folderCheck();
+    // if (news.length) folderTipsFlsh();
   }
   else animationOfLogin(1);
 

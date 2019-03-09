@@ -70,7 +70,7 @@ const Create = [
         props: {
           title: "Next"
         },
-        layout: function(make, view) {
+        layout: function (make, view) {
           make.bottom.inset(20);
           make.width.equalTo(64);
           make.centerX.equalTo(view.super);
@@ -377,13 +377,14 @@ const Delete = [
         props: {
           title: "Next"
         },
-        layout: function(make, view) {
+        layout: function (make, view) {
           make.bottom.inset(20);
           make.width.equalTo(64);
           make.centerX.equalTo(view.super);
         },
         events: {
           tapped: sender => {
+            $("deleteReposName").text = $("reposBtn").title;
             $("gallery").page++;
           }
         }
@@ -421,12 +422,13 @@ const Delete = [
         }
       },
       {
-        type: "input",
+        type: "label",
         props: {
-          id: "deletereposName",
+          font: $font("bold", 20),
+          id: "deleteReposName",
           type: $kbType.ascii,
           align: $align.center,
-          placeholder: "Here Input Delete Repo Name"
+          textColor: $color("red")
         },
         layout: (make, view) => {
           make.height.equalTo(32);
@@ -446,17 +448,73 @@ const Delete = [
         },
         events: {
           tapped: sender => {
-            $("deletereposName").blur();
-            if ($("deletereposName").text.length) $("gallery").page++;
-            else {
-              $device.taptic(2);
-            }
+            if ($("deleteReposName").text == "Choose Repo") $device.taptic(2);
+            else $ui.alert({
+              title: "Two-factor Authentication",
+              message: "Confirm delete",
+              actions: [
+                {
+                  title: "Yes",
+                  handler: async () => {
+                    lottie.wait();
+                    let type = await git.deleteRepos($("deleteReposName").text);
+                    if (type == "") {
+                      git.log(`Repos (${$("deleteReposName").text}) is Delete Successful!`);
+                      animationOfROView(0, () => {
+                        $("ROGV").remove();
+                        $ui.alert({ title: "Successful" });
+                        $("reposBtn").title = "Choose Repo";
+                      });
+                    } else {
+                      $ui.alert({ title: "failure" });
+                      git.log(`Repos (${$("deleteReposName").text}) is Delete failure!`);
+                    }
+                    lottie.lottieStop();
+                  }
+                },
+                {
+                  title: "NO",
+                  handler: function () {
+
+                  }
+                }
+              ]
+            })
           }
         }
       }
     ]
   }
 ];
+
+function animationOfROView(alpha, handler) {
+  $("ROView").updateLayout(make => {
+    make.top.equalTo($("reposBtn").top);
+  });
+
+  if (alpha) {
+    $("ROView").relayout();
+    $("ROView")
+      .animator.moveY(35)
+      .makeOpacity(1)
+      .animateWithCompletion({
+        duration: 0.4,
+        completion: () => {
+          if (handler) handler();
+        }
+      });
+  } else
+    $("ROView")
+      .animator.moveY(-35)
+      .makeOpacity(0)
+      .animateWithCompletion({
+        duration: 0.4,
+        completion: () => {
+          if (handler) handler();
+        }
+      });
+}
+
 module.exports = {
   future: Future,
   create: Create,
