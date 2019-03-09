@@ -1,3 +1,4 @@
+let isCheck = false;
 async function checkLog() {
     let res = await $http.get(`https://ablecats.github.io/Releases/GitHubLog?t=${date()}`);
     return res.data
@@ -80,23 +81,26 @@ function foundNewVer(log) {
                     tapped: (sender) => $http.download({
                         url: "https://raw.githubusercontent.com/AbleCats/ablecats.github.io/master/Releases/GitHub.box",
                         handler: function (resp) {
-                            $addin.save({
-                                name: $addin.current.name,
-                                data: resp.data,
-                                handler: function (success) {
-                                    $device.taptic(2);
-                                    if (success) $file.delete("Version");
-                                    $ui.alert({
-                                        title: "Success",
-                                        actions: [{
-                                            title: "OK",
-                                            handler: () => {
-                                                $addin.restart();
-                                            }
-                                        }]
-                                    });
-                                }
-                            })
+                            if (!isCheck) {
+                                isCheck = true;
+                                $addin.save({
+                                    name: $addin.current.name,
+                                    data: resp.data,
+                                    handler: function (success) {
+                                        $device.taptic(2);
+                                        if (success) $file.delete("Version");
+                                        $ui.alert({
+                                            title: "Success",
+                                            actions: [{
+                                                title: "OK",
+                                                handler: () => {
+                                                    $addin.restart();
+                                                }
+                                            }]
+                                        });
+                                    }
+                                })
+                            }
                         }
                     })
                 }
@@ -165,6 +169,7 @@ function shadows(view) {
             .invoke("CGColor")
     );
 }
+
 function date() {
     return new Date().getTime();
 }
