@@ -60,8 +60,14 @@ class github {
   }
 
   body(u, m, b) {
+    function mCheck() {
+      if (m) {
+        if (m == "GET") return true
+        return false
+      } else return true;
+    }
     return {
-      url: m == "GET" ? u + `?t=${this.date()}` : u,
+      url: mCheck() ? u + `?t=${this.date()}` : u,
       body: b ? b : {},
       method: m ? m : "GET",
       header: {
