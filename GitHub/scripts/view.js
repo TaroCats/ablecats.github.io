@@ -1,5 +1,6 @@
 let git, news;
 let env = $app.env;
+
 let app = require("scripts/app.js");
 let item = require("scripts/item.js");
 let lottie = require("scripts/lottie.js");
@@ -653,6 +654,7 @@ function findNewFolder(sender) {
 }
 
 async function init() {
+
   git = new app.git();
   git.log();
 
@@ -674,5 +676,6 @@ async function init() {
   }
   else animationOfLogin(1);
 
+  
   return flag;
 }
