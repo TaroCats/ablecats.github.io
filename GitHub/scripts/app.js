@@ -217,8 +217,9 @@ class github {
     if (!this.file.user) return false;
     let data = await this.requets(`${host}/${this.file.user}`);
     let flag = data.login == this.file.user ? true : false;
-    this.log(`${this.file.user} login ${flag ? "succese" : "faled"}`);
 
+    if (flag) this.log(`${this.file.user} login Succese!`);
+    else this.log(`${this.file.user} login failure \n Message: ${data.message}`);
     return flag;
   }
 
@@ -373,6 +374,7 @@ class github {
 
 
   }
+
 }
 module.exports = {
   git: github,
