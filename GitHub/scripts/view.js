@@ -444,7 +444,7 @@ const RO = {
           let data = await $drive.open();
           animationOfROView(1);
           console.log(data);
-          //viewAddNewItem(item.future);
+          viewAddNewItem(item.future);
         }
       }
     },
