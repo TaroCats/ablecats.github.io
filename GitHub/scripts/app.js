@@ -97,6 +97,39 @@ class github {
     });
   }
 
+  async zip(u, n) {
+    let lay = 3;
+
+    this.log(`${n} start download...`);
+    let res = await $http.download({
+      url: u,
+      showsProgress: false
+    });
+    let flag = await $archiver.unzip({
+      file: res.data,
+      dest: `/Files/${n}/`
+    });
+
+    if (flag) {
+      let zipd = `Files/${n}/${n}-master`;
+      let temp = $file.list(zipd);
+      temp.map(x => {
+        $file.move({
+          src: `Files/${n}/${n}-master/${x}`,
+          dst: `Files/${n}/${x}`
+        });
+      });
+      $file.delete(zipd);
+      await this.mapFolder(`Files/${n}`);
+      this.log(`${n}.zip download succese...`);
+    } else {
+      this.log(`${n} faild,try again at ${lay}s...`);
+      $delay(lay, async () => {
+        await this.zip(u, n);
+      });
+    }
+  }
+
   async check(P, F) {
     let data = await this.requets(
       `https://api.github.com/repos/${this.file.user}/${P}/contents/${
@@ -166,46 +199,13 @@ class github {
           if (temp.length) {
             temp.map(async y => {
               if (y.name == x)
-                await this.upload(x, x.sha, $file.read(p), "JSBox", P);
+                await this.upload(x, y.sha, $file.read(p), "JSBox", P);
             });
           }
           else await this.create(x, $file.read(p), "JSBox", P);
         } else this.log(`${x} Skip Upload...`);
       }
     });
-  }
-
-  async zip(u, n) {
-    let lay = 3;
-
-    this.log(`${n} start download...`);
-    let res = await $http.download({
-      url: u,
-      showsProgress: false
-    });
-    let flag = await $archiver.unzip({
-      file: res.data,
-      dest: `/Files/${n}/`
-    });
-
-    if (flag) {
-      let zipd = `Files/${n}/${n}-master`;
-      let temp = $file.list(zipd);
-      temp.map(x => {
-        $file.move({
-          src: `Files/${n}/${n}-master/${x}`,
-          dst: `Files/${n}/${x}`
-        });
-      });
-      $file.delete(zipd);
-      await this.mapFolder(`Files/${n}`);
-      this.log(`${n}.zip download succese...`);
-    } else {
-      this.log(`${n} faild,try again at ${lay}s...`);
-      $delay(lay, async () => {
-        await this.zip(u, n);
-      });
-    }
   }
 
   async syncToCloud(P) {
@@ -351,6 +351,27 @@ class github {
       "DELETE"
     );
     return res;
+  }
+
+  async selectFileUpload(name, data) {
+    let repoName = $("reposBtn").title;
+    if (repoName != "Choose Repo") {
+      this.log(`${name} Ready To Upload...`);
+      let cloud = await this.check(repoName);
+      let temp = cloud.filter(v => v.name == name);
+      if (temp.length) {
+        temp.map(async y => {
+          if (y.name == name)
+            await this.upload(name, y.sha, data, "JSBox", repoName);
+        });
+      }
+      else await this.create(name, data, "JSBox", repoName);
+    }
+    else $ui.alert({
+      title: "Please Specify Repos!",
+    });
+
+
   }
 }
 module.exports = {

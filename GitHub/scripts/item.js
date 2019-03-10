@@ -489,36 +489,100 @@ const Delete = [
   }
 ];
 
-function animationOfROView(alpha, handler) {
-  $("ROView").updateLayout(make => {
-    make.top.equalTo($("reposBtn").top);
-  });
+const Select = [ //
+  {
+    type: "view",
+    props: {},
+    views: [
+      {
+        type: "label",
+        props: {
+          align: $align.center,
+          font: $font("bold", 20),
+          text: "Select File Upload"
+        },
+        layout: (make, view) => {
+          make.top.inset(20);
+          make.width.equalTo(view.super);
+        }
+      },
+      {
+        type: "button",
+        props: {
+          title: "Next"
+        },
+        layout: function (make, view) {
+          make.bottom.inset(20);
+          make.width.equalTo(64);
+          make.centerX.equalTo(view.super);
+        },
+        events: {
+          tapped: async (sender) => {
+            let data = await $drive.open();
+            if (data) {
+              $("gallery").page++;
+              $("ROView").info = data;
+              $("selectFileName").text = data.fileName;
+            }
+          }
+        }
+      }
+    ]
+  }, {
+    type: "view",
+    props: {},
+    views: [
+      {
+        type: "label",
+        props: {
+          align: $align.center,
+          font: $font("bold", 20),
+          text: "Confirm File Name"
+        },
+        layout: (make, view) => {
+          make.top.inset(20);
+          make.width.equalTo(view.super);
+        }
+      }, {
+        type: "input",
+        props: {
+          id: "selectFileName",
+          align: $align.center,
+        },
+        layout: (make, view) => {
+          make.height.equalTo(32);
+          make.left.right.inset(40);
+          make.center.equalTo(view.super);
+        }
+      },
+      {
+        type: "button",
+        props: {
+          title: "Next"
+        },
+        layout: function (make, view) {
+          make.bottom.inset(20);
+          make.width.equalTo(64);
+          make.centerX.equalTo(view.super);
+        },
+        events: {
+          tapped: sender => {
+            git.selectFileUpload($("selectFileName").text, $("ROView").info);
+            $ui.alert({
+              title: "Wait a Moment",
+              message: "Result Look At The Log",
+            });
+          }
+        }
+      }
+    ]
+  },
+];
 
-  if (alpha) {
-    $("ROView").relayout();
-    $("ROView")
-      .animator.moveY(35)
-      .makeOpacity(1)
-      .animateWithCompletion({
-        duration: 0.4,
-        completion: () => {
-          if (handler) handler();
-        }
-      });
-  } else
-    $("ROView")
-      .animator.moveY(-35)
-      .makeOpacity(0)
-      .animateWithCompletion({
-        duration: 0.4,
-        completion: () => {
-          if (handler) handler();
-        }
-      });
-}
 
 module.exports = {
   future: Future,
   create: Create,
-  delete: Delete
+  delete: Delete,
+  select: Select
 };
