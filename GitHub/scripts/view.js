@@ -441,8 +441,10 @@ const RO = {
       },
       events: {
         tapped: async sender => {
+          let data = await $drive.open();
           animationOfROView(1);
-          viewAddNewItem(item.future);
+          console.log(data);
+          //viewAddNewItem(item.future);
         }
       }
     },

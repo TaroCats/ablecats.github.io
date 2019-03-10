@@ -3,7 +3,7 @@ const host = "https://api.github.com/users";
 if (!$file.exists(path)) $file.mkdir(path);
 
 function userManeger(user, token, repos) {
-  var db = $sqlite.open(`${path}Files.db`);
+  var db = $sqlite.open(`shared://GitHub/Files.db`);
   db.query(`SELECT * FROM User`).error
     ? db.update(`CREATE TABLE User(user text, token text,repos text)`)
     : 0;
@@ -158,13 +158,18 @@ class github {
         if (check == "underfind") {
           this.log(`${x} Ready To Upload...`);
           await this.create(x, $file.read(p), "JSBox", P);
-        } else if (check == true) {
+        }
+        else if (check == true) {
           this.log(`${x} Ready To Upload...`);
           let cloud = await this.check(P);
-          cloud.map(async y => {
-            if (y.name == x)
-              await this.upload(x, x.sha, $file.read(p), "JSBox", P);
-          });
+          let temp = cloud.filter(v => v.name == x);
+          if (temp.length) {
+            temp.map(async y => {
+              if (y.name == x)
+                await this.upload(x, x.sha, $file.read(p), "JSBox", P);
+            });
+          }
+          else await this.create(x, $file.read(p), "JSBox", P);
         } else this.log(`${x} Skip Upload...`);
       }
     });
@@ -251,7 +256,7 @@ class github {
   async SQLRead(path, MD5) {
     let temp;
     let name = await this.pathName(path);
-    var db = $sqlite.open(`${path}Files.db`);
+    var db = $sqlite.open(`shared://GitHub/Files.db`);
     var result = db.query({
       sql: `SELECT * FROM ${name} WHERE path=?`,
       args: [path]
@@ -268,7 +273,7 @@ class github {
 
   async SQLWrite(path, MD5) {
     let name = await this.pathName(path);
-    var db = $sqlite.open(`${path}Files.db`);
+    var db = $sqlite.open(`shared://GitHub/Files.db`);
     db.query(`SELECT * FROM ${name.toString()}`).error
       ? db.update(`CREATE TABLE ${name}(path text, md5 text)`)
       : 0;
@@ -309,7 +314,7 @@ class github {
   async CheckFolder() {
     var data = [];
     var files = $file.list("Files");
-    var sqLite = $sqlite.open(`${path}Files.db`);
+    var sqLite = $sqlite.open(`shared://GitHub/Files.db`);
 
     let text = sqLite.query(`SELECT name FROM sqlite_master`).result;
     while (text.next()) {
