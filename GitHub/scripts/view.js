@@ -668,9 +668,9 @@ async function init() {
   });
 
   let flag = await git.tokenCheck($("Login").alpha ? lottie.fill : lottie.wait);
+  lottie.lottieStop();
   if (flag) {
     animationOfLogin(0);
-    lottie.lottieStop();
     // news = await git.folderCheck();
     // if (news.length) folderTipsFlsh();
   }
