@@ -579,10 +579,155 @@ const Select = [ //
   },
 ];
 
+const Issues = [
+  {
+    type: "view",
+    props: {},
+    views: [
+      {
+        type: "label",
+        props: {
+          align: $align.center,
+          font: $font("bold", 20),
+          text: "Report An Issue"
+        },
+        layout: (make, view) => {
+          make.top.inset(20);
+          make.width.equalTo(view.super);
+        }
+      }, {
+        type: "button",
+        props: {
+          title: "Next"
+        },
+        layout: function (make, view) {
+          make.bottom.inset(20);
+          make.width.equalTo(64);
+          make.centerX.equalTo(view.super);
+        },
+        events: {
+          tapped: sender => {
+            $("gallery").page++;
+          }
+        }
+      }
+    ]
+  }, {
+    type: "view",
+    props: {},
+    views: [
+      {
+        type: "label",
+        props: {
+          id: "issuesTitleLabel",
+          align: $align.center,
+          font: $font("bold", 20),
+          text: "Title"
+        },
+        layout: (make, view) => {
+          make.top.inset(20);
+          make.width.equalTo(view.super);
+        }
+      }, {
+        type: "input",
+        props: {
+          id: "issuesTitle",
+          align: $align.center,
+        },
+        layout: (make, view) => {
+          make.height.equalTo(32);
+          make.left.right.inset(40);
+          make.center.equalTo(view.super);
+        }
+      }, {
+        type: "button",
+        props: {
+          title: "Next"
+        },
+        layout: function (make, view) {
+          make.bottom.inset(20);
+          make.width.equalTo(64);
+          make.centerX.equalTo(view.super);
+        },
+        events: {
+          tapped: sender => {
+            if (!$("issuesTitle").text) {
+              $device.taptic(2);
+              $("issuesTitleLabel").textColor = $color("red");
+            }
+            else {
+              $("gallery").page++;
+              $("issuesTitleLabel").textColor = $color("black");
+            }
+          }
+        }
+      }
+    ]
+  }, {
+    type: "view",
+    props: {},
+    views: [
+      {
+        type: "label",
+        props: {
+          id: "issuesBodyLabel",
+          align: $align.center,
+          font: $font("bold", 20),
+          text: "Detailed Description"
+        },
+        layout: (make, view) => {
+          make.top.inset(20);
+          make.width.equalTo(view.super);
+        }
+      }, {
+        type: "text",
+        props: {
+          radius: 10,
+          id: "issuesBody",
+          align: $align.center,
+          bgcolor: $rgba(255, 255, 255, .6)
+        },
+        layout: (make, view) => {
+          make.height.equalTo(80);
+          make.left.right.inset(40);
+          make.center.equalTo(view.super);
+        }
+      }, {
+        type: "button",
+        props: {
+          id: "issueBtn",
+          title: "Next"
+        },
+        layout: function (make, view) {
+          make.bottom.inset(20);
+          make.width.equalTo(64);
+          make.centerX.equalTo(view.super);
+        },
+        events: {
+          tapped: async (sender) => {
+            if (!$("issuesBody").text) {
+              $device.taptic(2);
+              $("issuesBodyLabel").textColor = $color("red");
+            }
+            else {
+              $("issuesTitleLabel").textColor = $color("black");
+              if ($("issuesBody").text && $("issuesTitle").text) {
+                lottie.wait();
+                await git.repostIssuse($("issuesTitle").text, $("issuesBody").text);
+                lottie.lottieStop();
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+];
 
 module.exports = {
   future: Future,
   create: Create,
   delete: Delete,
-  select: Select
+  select: Select,
+  issues: Issues
 };

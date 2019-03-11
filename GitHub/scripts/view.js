@@ -399,7 +399,7 @@ const RO = {
       type: "button",
       props: {
         bgcolor: $color("clear"),
-        icon: $icon("129", $color("black"), $size(23, 23)) //设置
+        icon: $icon("008", $color("black"), $size(20, 20)) //设置
       },
       layout: (make, view) => {
         make.right.inset(0);
@@ -408,7 +408,7 @@ const RO = {
       events: {
         tapped: () => {
           animationOfROView(1);
-          viewAddNewItem(item.future);
+          viewAddNewItem(item.issues);
         }
       }
     },

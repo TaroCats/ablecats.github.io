@@ -371,8 +371,21 @@ class github {
     else $ui.alert({
       title: "Please Specify Repos!",
     });
+  }
 
-
+  async repostIssuse(title, result) {
+    let res = await this.requets('https://api.github.com/repos/AbleCats/ablecats.github.io/issues', "POST", {
+      "title": title,
+      "body": result
+    });
+    if (res.title == title) $ui.alert({
+      title: "Susseces",
+      message: "AbleCats Will Check Later",
+    });
+    else $ui.alert({
+      title: "Failur",
+      message: "Check The Operation",
+    });
   }
 
 }
