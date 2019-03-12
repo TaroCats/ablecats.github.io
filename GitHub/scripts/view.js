@@ -6,11 +6,26 @@ let item = require("scripts/item.js");
 let lottie = require("scripts/lottie.js");
 
 let file = app.user();
-
+const icon = [$icon("160", $color("black"), $size(20, 20)), $icon("161", $color("black"), $size(20, 20))]
 $app.autoKeyboardEnabled = true;
 $app.keyboardToolbarEnabled = true;
 
-const Login = {
+const roView = {
+  type: "view",
+  props: {
+    alpha: 0,
+    id: "ROView",
+    bgcolor: $color("#F5F5F5")
+  },
+  layout: (make, view) => {
+    viewsAddShadows(view);
+    make.height.equalTo(200);
+    make.left.right.inset(10);
+    make.centerX.equalTo(view.super);
+    make.top.equalTo($("reposBtn").top);
+  }
+};
+const login = {
   type: "blur",
   props: {
     id: "Login",
@@ -150,7 +165,6 @@ const repos = {
     }
   }
 };
-
 const logs = [
   {
     title: "logs",
@@ -347,6 +361,7 @@ const top = {
   ]
 };
 
+
 const LG = {
   type: "list",
   props: {
@@ -373,36 +388,41 @@ const LG = {
 const RO = {
   type: "view",
   props: {
-    id: "RO"
+    id: "RO",
+    radius: 12.5,
+    bgcolor: $rgba(0, 0, 0, .1)
   },
   layout: (make, view) => {
+    make.right.inset(10);
     make.height.equalTo(25);
-    make.left.right.inset(10);
-    make.centerX.equalTo(view.super);
+    make.width.equalTo(160);
     make.top.equalTo(view.prev.bottom).offset(5);
   },
   views: [
     {
-      type: "label",
+      type: "button",
       props: {
-        //text: "GitHub",
-        align: $align.left,
-        font: $font(12)
+        info: false,
+        id: "RObtn",
+        bgcolor: $color("clear"),
+        icon: icon[1] //收缩 //160
       },
       layout: (make, view) => {
-        make.width.equalTo(120);
-        make.top.left.inset(0);
         make.centerY.equalTo(view.super);
+        make.left.inset(10)
+      },
+      events: {
+        tapped: (sender) => animateOfRO(sender.info)
       }
     },
     {
       type: "button",
       props: {
         bgcolor: $color("clear"),
-        icon: $icon("008", $color("black"), $size(20, 20)) //设置
+        icon: $icon("008", $color("black"), $size(20, 20)) //提交
       },
       layout: (make, view) => {
-        make.right.inset(0);
+        make.right.inset(10);
         make.centerY.equalTo(view.super);
       },
       events: {
@@ -416,7 +436,7 @@ const RO = {
       type: "button",
       props: {
         bgcolor: $color("clear"),
-        icon: $icon("027", $color("blac"), $size(20, 20)) //删除
+        icon: $icon("027", $color("black"), $size(20, 20)) //删除
       },
       layout: (make, view) => {
         make.centerY.equalTo(view.super);
@@ -466,24 +486,22 @@ const RO = {
   ]
 };
 
-const ROView = {
-  type: "view",
-  props: {
-    alpha: 0,
-    id: "ROView",
-    bgcolor: $color("#F5F5F5")
-  },
-  layout: (make, view) => {
-    viewsAddShadows(view);
-    make.height.equalTo(200);
-    make.left.right.inset(10);
-    make.centerX.equalTo(view.super);
-    make.top.equalTo($("reposBtn").top);
-  }
-};
 
-const ROTemp = item => {
-  return {
+
+if (env == $env.app) {
+  $ui.render({
+    props: {
+      id: "MainView",
+      statusBarStyle: 0,
+      navBarHidden: true
+    },
+    views: [top, repos, RO, LG, login, roView]
+  });
+  init();
+}
+
+function viewAddNewItem(item) {
+  $("ROView").add({
     type: "view",
     props: {
       id: "ROGV"
@@ -518,23 +536,7 @@ const ROTemp = item => {
         }
       }
     ]
-  };
-};
-
-if (env == $env.app) {
-  $ui.render({
-    props: {
-      id: "MainView",
-      statusBarStyle: 0,
-      navBarHidden: true
-    },
-    views: [top, repos, RO, LG, Login, ROView]
   });
-  init();
-}
-
-function viewAddNewItem(item) {
-  $("ROView").add(ROTemp(item));
 }
 
 function viewsAddShadows(view) {
@@ -552,6 +554,17 @@ function viewsAddShadows(view) {
   );
 }
 
+
+function animateOfRO(sender) {
+  $("RO").animator.moveX(sender ? 130 : -130).easeBack.animateWithCompletion({
+    duration: 0.4,
+    completion: () => {
+      $("RObtn").info = !sender;
+      $("RObtn").icon = icon[sender ? 0 : 1];
+    }
+  })
+}
+
 function animationOfLogin(alpha) {
   $ui.animate({
     duration: 0.4,
@@ -559,26 +572,6 @@ function animationOfLogin(alpha) {
       $("Login").alpha = alpha;
     },
     completion: () => { }
-  });
-}
-
-function animationOflistBlur(alpha) {
-  $ui.animate({
-    duration: 0.4,
-    animation: () => {
-      $("listBlur").alpha = alpha;
-    },
-    completion: () => { }
-  });
-}
-
-function animationOfFolderTips(alpha, handler) {
-  $ui.animate({
-    duration: 1,
-    animation: () => {
-      $("newReposTip").alpha = alpha;
-    },
-    completion: handler
   });
 }
 
@@ -608,6 +601,26 @@ function animationOfROView(alpha, handler) {
           if (handler) handler();
         }
       });
+}
+
+function animationOflistBlur(alpha) {
+  $ui.animate({
+    duration: 0.4,
+    animation: () => {
+      $("listBlur").alpha = alpha;
+    },
+    completion: () => { }
+  });
+}
+
+function animationOfFolderTips(alpha, handler) {
+  $ui.animate({
+    duration: 1,
+    animation: () => {
+      $("newReposTip").alpha = alpha;
+    },
+    completion: handler
+  });
 }
 
 function folderTipsFlsh() {
@@ -671,11 +684,14 @@ async function init() {
   lottie.lottieStop();
   if (flag) {
     animationOfLogin(0);
+    $delay(0.5, function () {
+      animateOfRO(true);
+    });
     // news = await git.folderCheck();
     // if (news.length) folderTipsFlsh();
   }
   else animationOfLogin(1);
 
-  
+
   return flag;
 }
