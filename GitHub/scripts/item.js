@@ -715,6 +715,7 @@ const Issues = [
                 lottie.wait();
                 await git.repostIssuse($("issuesTitle").text, $("issuesBody").text);
                 lottie.lottieStop();
+                animationOfROView(0);
               }
             }
           }
