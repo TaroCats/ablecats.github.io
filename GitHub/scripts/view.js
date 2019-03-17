@@ -565,7 +565,9 @@ function animateOfRO(sender) {
     }
   })
 }
-
+function animateOfROTT() {
+  $("RO").animator.moveX(-10).thenAfter(.1).moveX(10).thenAfter(.2).moveX(-10).thenAfter(.1).moveX(10).animate(0.4);
+}
 function animationOfLogin(alpha) {
   $ui.animate({
     duration: 0.4,
@@ -696,3 +698,13 @@ async function init() {
 
   return flag;
 }
+
+
+$timer.schedule({
+  interval: 2,
+  handler: function () {
+    console.log($("RObtn").info)
+    if (!$("RObtn").info)
+      animateOfROTT()
+  }
+})
