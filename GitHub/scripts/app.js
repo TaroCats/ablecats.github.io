@@ -214,7 +214,7 @@ class github {
 
   async tokenCheck(handler) {
     handler();
-    if (!this.file.user) return false;
+    if (!this.file) return false;
     let data = await this.requets(`${host}/${this.file.user}`);
     let flag = data.login == this.file.user ? true : false;
 
