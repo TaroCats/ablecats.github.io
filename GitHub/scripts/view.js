@@ -1,4 +1,4 @@
-let git, news;
+let git, news, time;
 let env = $app.env;
 
 let app = require("scripts/app.js");
@@ -695,16 +695,15 @@ async function init() {
   }
   else animationOfLogin(1);
 
-
+  if (!time) time = $timer.schedule({
+    interval: 2,
+    handler: function () {
+      console.log($("RObtn").info)
+      if (!$("RObtn").info)
+        animateOfROTT()
+    }
+  });
   return flag;
 }
 
 
-$timer.schedule({
-  interval: 2,
-  handler: function () {
-    console.log($("RObtn").info)
-    if (!$("RObtn").info)
-      animateOfROTT()
-  }
-})
