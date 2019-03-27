@@ -1,4 +1,4 @@
-let git, news, time;
+let git, news;
 let env = $app.env;
 
 let app = require("scripts/app.js");
@@ -6,7 +6,7 @@ let item = require("scripts/item.js");
 let lottie = require("scripts/lottie.js");
 
 let file = app.user();
-const icon = [$icon("160", $color("black"), $size(20, 20)), $icon("161", $color("black"), $size(20, 20))]
+
 $app.autoKeyboardEnabled = true;
 $app.keyboardToolbarEnabled = true;
 
@@ -131,40 +131,6 @@ const login = {
     }
   ],
   layout: $layout.fill
-};
-
-
-const repos = {
-  type: "button",
-  props: {
-    id: "reposBtn",
-    title: file ? (file.repos ? file.repos : "Choose Repo") : "Choose Repo",
-    align: $align.center,
-    bgcolor: $color("black")
-  },
-  layout: function (make, view) {
-    make.height.equalTo(30);
-    make.left.right.inset(10);
-    make.centerX.equalTo(view.super);
-    make.top.equalTo(view.prev.bottom).offset(20);
-  },
-  events: {
-    tapped: async sender => {
-      sender.userInteractionEnabled = false;
-      lottie.wait();
-      let res = await git.reposCheck();
-      lottie.lottieStop();
-      let pick = await $pick.data({ props: { items: [res] } });
-      sender.userInteractionEnabled = true;
-      if (pick[0]) {
-        git.folder(pick[0]);
-        file.repos = pick[0];
-        sender.title = pick[0];
-        git.log(`Choose Repo ( ${pick[0]} )`);
-        app.user(file.user, file.token, pick[0]);
-      }
-    }
-  }
 };
 const logs = [
   {
@@ -361,8 +327,6 @@ const top = {
     }
   ]
 };
-
-
 const LG = {
   type: "list",
   props: {
@@ -385,35 +349,35 @@ const LG = {
     }
   }
 };
-
 const RO = {
   type: "view",
   props: {
     id: "RO",
     radius: 12.5,
-    bgcolor: $rgba(0, 0, 0, .1)
+    bgcolor: $rgba(0, 0, 0, 0.1)
   },
   layout: (make, view) => {
     make.right.inset(10);
     make.height.equalTo(25);
     make.width.equalTo(160);
-    make.top.equalTo(view.prev.bottom).offset(5);
+    make.top.equalTo($("reposBtn").bottom).offset(5)
   },
   views: [
     {
       type: "button",
       props: {
-        info: false,
+        info: true,
         id: "RObtn",
         bgcolor: $color("clear"),
-        icon: icon[1] //收缩 //160
+        src: "assets/back.png"
       },
       layout: (make, view) => {
+        make.size.equalTo($size(25, 25));
         make.centerY.equalTo(view.super);
-        make.left.inset(10)
+        make.left.inset(10);
       },
       events: {
-        tapped: (sender) => animateOfRO(sender.info)
+        tapped: sender => animateOfRO(sender.info, 1)
       }
     },
     {
@@ -487,6 +451,40 @@ const RO = {
   ]
 };
 
+const repos = {
+  type: "button",
+  props: {
+    id: "reposBtn",
+    title: file ? (file.repos ? file.repos : "Choose Repo") : "Choose Repo",
+    //align: $align.left,
+    bgcolor: $color("black")
+  },
+  layout: function (make, view) {
+    make.height.equalTo(30);
+    make.left.right.inset(10);
+    make.centerX.equalTo(view.super);
+    make.top.equalTo(view.prev.bottom).offset(10);
+  },
+  events: {
+    tapped: async sender => {
+
+      sender.userInteractionEnabled = false;
+      lottie.wait();
+      let res = await git.reposCheck();
+      lottie.lottieStop();
+      let pick = await $pick.data({ props: { items: [res] } });
+      sender.userInteractionEnabled = true;
+
+      if (pick[0]) {
+        git.folder(pick[0]);
+        file.repos = pick[0];
+        sender.title = pick[0];
+        git.log(`Choose Repo ( ${pick[0]} )`);
+        app.user(file.user, file.token, pick[0]);
+      }
+    }
+  }
+};
 
 
 if (env == $env.app) {
@@ -556,17 +554,27 @@ function viewsAddShadows(view) {
 }
 
 
-function animateOfRO(sender) {
-  $("RO").animator.moveX(sender ? 130 : -130).easeBack.animateWithCompletion({
-    duration: 0.4,
-    completion: () => {
-      $("RObtn").info = !sender;
-      $("RObtn").icon = icon[sender ? 0 : 1];
-    }
-  })
+function animateOfRO(sender, rotate) {
+  if (rotate) animationOfBackRotate(sender ? -180 : 180);
+  $("RO")
+    .animator.moveX(sender ? 130 : -130)
+    .easeBack.animateWithCompletion({
+      duration: 0.4,
+      completion: () => {
+        $("RObtn").info = !sender;
+      }
+    });
 }
 function animateOfROTT() {
-  $("RO").animator.moveX(-10).thenAfter(.1).moveX(10).thenAfter(.2).moveX(-10).thenAfter(.1).moveX(10).animate(0.4);
+  $("RO")
+    .animator.moveX(-10)
+    .thenAfter(0.1)
+    .moveX(10)
+    .thenAfter(0.2)
+    .moveX(-10)
+    .thenAfter(0.1)
+    .moveX(10)
+    .animate(0.4);
 }
 function animationOfLogin(alpha) {
   $ui.animate({
@@ -577,7 +585,6 @@ function animationOfLogin(alpha) {
     completion: () => { }
   });
 }
-
 function animationOfROView(alpha, handler) {
   $("ROView").updateLayout(make => {
     make.top.equalTo($("reposBtn").top);
@@ -605,7 +612,6 @@ function animationOfROView(alpha, handler) {
         }
       });
 }
-
 function animationOflistBlur(alpha) {
   $ui.animate({
     duration: 0.4,
@@ -615,7 +621,6 @@ function animationOflistBlur(alpha) {
     completion: () => { }
   });
 }
-
 function animationOfFolderTips(alpha, handler) {
   $ui.animate({
     duration: 1,
@@ -625,19 +630,32 @@ function animationOfFolderTips(alpha, handler) {
     completion: handler
   });
 }
-
-function folderTipsFlsh() {
-  $("icon").userInteractionEnabled = true;
-  animationOfFolderTips(1, () => {
-    animationOfFolderTips(0, () => {
-      animationOfFolderTips(1, () => {
-        animationOfFolderTips(0, () => {
-          animationOfFolderTips(1);
-        });
-      });
+function animationOfBackRotate(rotate, handle) {
+  $("RObtn")
+    .animator.rotate(rotate)
+    .easeOutBounce.animateWithCompletion({
+      duration: 1,
+      completion: async () => {
+        if (handle) {
+          await $wait(0.5);
+          if ($("back")) animationOfBackRotate();
+        }
+      }
     });
-  });
 }
+
+// function folderTipsFlsh() {
+//   $("icon").userInteractionEnabled = true;
+//   animationOfFolderTips(1, () => {
+//     animationOfFolderTips(0, () => {
+//       animationOfFolderTips(1, () => {
+//         animationOfFolderTips(0, () => {
+//           animationOfFolderTips(1);
+//         });
+//       });
+//     });
+//   });
+// }
 
 function findNewFolder(sender) {
   $ui.action({
@@ -670,7 +688,6 @@ function findNewFolder(sender) {
 }
 
 async function init() {
-
   git = new app.git();
   git.log();
 
@@ -689,21 +706,11 @@ async function init() {
     animationOfLogin(0);
     $delay(0.5, function () {
       animateOfRO(true);
+      animationOfBackRotate(-90);
     });
     // news = await git.folderCheck();
     // if (news.length) folderTipsFlsh();
-  }
-  else animationOfLogin(1);
+  } else animationOfLogin(1);
 
-  if (!time) time = $timer.schedule({
-    interval: 2,
-    handler: function () {
-      console.log($("RObtn").info)
-      if (!$("RObtn").info)
-        animateOfROTT()
-    }
-  });
   return flag;
 }
-
-
