@@ -177,7 +177,7 @@ const left = {
     bgcolor: $color("clear")
   },
   views: [{
-    type: "button",
+    type: "image",
     props: {
       alpha: .8,
       bgcolor: $color("clear"),
@@ -530,7 +530,7 @@ const RO = {
     make.centerY.equalTo(view.super);
   },
   views: [{
-    type: "button",
+    type: "image",
     props: {
       alpha: .8,
       info: true,
