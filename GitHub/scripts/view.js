@@ -19,10 +19,46 @@ const roView = {
   },
   layout: (make, view) => {
     viewsAddShadows(view);
+    make.left.inset(10);
+    make.right.inset(90);
     make.height.equalTo(200);
-    make.left.right.inset(10);
     make.centerX.equalTo(view.super);
     make.top.equalTo($("reposBtn").top);
+  }
+};
+const repos = {
+  type: "button",
+  props: {
+    id: "reposBtn",
+    title: file ? (file.repos ? file.repos : "Choose Repo") : "Choose Repo",
+    //align: $align.left,
+    bgcolor: $color("black")
+  },
+  layout: function (make, view) {
+    make.left.inset(10);
+    make.right.inset(90);
+    make.height.equalTo(30);
+    make.centerX.equalTo(view.super);
+    make.top.inset($device.isIphoneX ? 40 : 10);
+  },
+  events: {
+    tapped: async sender => {
+      sender.userInteractionEnabled = false;
+      lottie.fill();
+      $("left").info = 1;
+      let res = await git.reposCheck();
+      lottie.lottieStop();
+      let pick = await $pick.data({ props: { items: [res] } });
+      sender.userInteractionEnabled = true;
+
+      if (pick[0]) {
+        git.folder(pick[0]);
+        file.repos = pick[0];
+        sender.title = pick[0];
+        git.log(`Choose Repo ( ${pick[0]} )`);
+        app.user(file.user, file.token, pick[0]);
+      }
+    }
   }
 };
 const login = {
@@ -132,6 +168,137 @@ const login = {
   ],
   layout: $layout.fill
 };
+const left = {
+  type: "view",
+  props: {
+    info: 0,
+    alpha: 0,
+    id: "left",
+    bgcolor: $color("clear")
+  },
+  views: [{
+    type: "button",
+    props: {
+      alpha: .8,
+      bgcolor: $color("clear"),
+      src: "assets/backWhite.png"
+    },
+    layout: (make, view) => {
+      make.size.equalTo($size(35, 35));
+      make.centerY.equalTo(view.super);
+      make.left.inset(20);
+    },
+    events: {
+      tapped: sender => animateOfRO(0, $("left").info)
+    }
+  }, {
+    type: "view",
+    props: {
+      bgcolor: $color("white")
+    },
+    layout: (make, view) => {
+      make.width.equalTo(view.super);
+      make.height.equalTo(view.super);
+      make.left.inset(80);
+    },
+    views: [repos, {
+      type: "matrix",
+      props: {
+        square: 1,
+        columns: 4,
+        itemHeight: 50,
+        spacing: 5,
+        scrollEnabled: 0,
+        template: {
+          props: {},
+          views: [{
+            type: "view",
+            views: [{
+              type: "image",
+              props: {
+                id: "button",
+                bgcolor: $color("clear"),
+              },
+              layout: (make, view) => {
+                make.center.equalTo(view.super);
+              }
+            }, {
+              type: "label",
+              props: {
+                id: "label",
+                textColor: $color("black"),
+                align: $align.center,
+                font: $font(10)
+              },
+              layout: (make, view) => {
+                make.top.equalTo(view.prev.bottom).offset(5);
+                make.centerX.equalTo(view.super);
+              },
+            }],
+            layout: $layout.fill
+          }]
+        },
+        data: [{
+          button: {
+            icon: $icon("104", $color("black"), $size(30, 30))
+          },
+          label: {
+            text: "新建"
+          }
+        }, {
+          button: {
+            icon: $icon("204", $color("black"), $size(30, 30))
+          },
+          label: {
+            text: "添加"
+          }
+        }, {
+          button: {
+            icon: $icon("027", $color("black"), $size(30, 30))
+          },
+          label: {
+            text: "删除"
+          }
+        }, {
+          button: {
+            icon: $icon("008", $color("black"), $size(30, 30))
+          },
+          label: {
+            text: "提交"
+          }
+        }]
+      },
+      layout: (make, view) => {
+        make.left.inset(10);
+        make.right.inset(90);
+        make.height.equalTo(80);
+        make.centerX.equalTo(view.super);
+        make.top.equalTo(view.prev.bottom).offset(5);
+      },
+      events: {
+        didSelect: (sender, indexPath, data) => {
+          animationOfROView(1);
+          switch (indexPath.row) {
+            case 0:
+              viewAddNewItem(item.create);
+              break;
+            case 1:
+              viewAddNewItem(item.select);
+              break;
+            case 2:
+              viewAddNewItem(item.delete);
+              break;
+            case 3:
+              viewAddNewItem(item.issues);
+              break;
+          }
+        }
+      }
+    }, roView]
+  }],
+  layout: $layout.fill,
+};
+
 const logs = [
   {
     title: "logs",
@@ -353,139 +520,38 @@ const RO = {
   type: "view",
   props: {
     id: "RO",
-    radius: 12.5,
+    radius: 25,
     bgcolor: $rgba(0, 0, 0, 0.1)
   },
   layout: (make, view) => {
-    make.right.inset(10);
-    make.height.equalTo(25);
-    make.width.equalTo(160);
-    make.top.equalTo($("reposBtn").bottom).offset(5)
+    make.right.inset(-20);
+    make.height.equalTo(50);
+    make.width.equalTo(70);
+    make.centerY.equalTo(view.super);
   },
-  views: [
-    {
-      type: "button",
-      props: {
-        info: true,
-        id: "RObtn",
-        bgcolor: $color("clear"),
-        src: "assets/back.png"
-      },
-      layout: (make, view) => {
-        make.size.equalTo($size(25, 25));
-        make.centerY.equalTo(view.super);
-        make.left.inset(10);
-      },
-      events: {
-        tapped: sender => animateOfRO(sender.info, 1)
-      }
+  views: [{
+    type: "button",
+    props: {
+      alpha: .8,
+      info: true,
+      id: "RObtn",
+      bgcolor: $color("clear"),
+      src: "assets/backBlack.png"
     },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("008", $color("black"), $size(20, 20)) //提交
-      },
-      layout: (make, view) => {
-        make.right.inset(10);
-        make.centerY.equalTo(view.super);
-      },
-      events: {
-        tapped: () => {
-          animationOfROView(1);
-          viewAddNewItem(item.issues);
-        }
-      }
+    layout: (make, view) => {
+      make.size.equalTo($size(35, 35));
+      make.centerY.equalTo(view.super);
+      make.left.inset(10);
     },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("027", $color("black"), $size(20, 20)) //删除
-      },
-      layout: (make, view) => {
-        make.centerY.equalTo(view.super);
-        make.right.equalTo(view.prev.left).offset(-10);
-      },
-      events: {
-        tapped: async sender => {
-          animationOfROView(1);
-          viewAddNewItem(item.delete);
-        }
-      }
-    },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("204", $color("black"), $size(20, 20)) //添加
-      },
-      layout: (make, view) => {
-        make.centerY.equalTo(view.super);
-        make.right.equalTo(view.prev.left).offset(-10);
-      },
-      events: {
-        tapped: async sender => {
-          animationOfROView(1);
-          viewAddNewItem(item.select);
-        }
-      }
-    },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("104", $color("black"), $size(20, 20)) //新建
-      },
-      layout: (make, view) => {
-        make.centerY.equalTo(view.super);
-        make.right.equalTo(view.prev.left).offset(-10);
-      },
-      events: {
-        tapped: async sender => {
-          animationOfROView(1);
-          viewAddNewItem(item.create);
-        }
-      }
-    }
-  ]
-};
-
-const repos = {
-  type: "button",
-  props: {
-    id: "reposBtn",
-    title: file ? (file.repos ? file.repos : "Choose Repo") : "Choose Repo",
-    //align: $align.left,
-    bgcolor: $color("black")
-  },
-  layout: function (make, view) {
-    make.height.equalTo(30);
-    make.left.right.inset(10);
-    make.centerX.equalTo(view.super);
-    make.top.equalTo(view.prev.bottom).offset(10);
-  },
-  events: {
-    tapped: async sender => {
-
-      sender.userInteractionEnabled = false;
-      lottie.wait();
-      let res = await git.reposCheck();
-      lottie.lottieStop();
-      let pick = await $pick.data({ props: { items: [res] } });
-      sender.userInteractionEnabled = true;
-
-      if (pick[0]) {
-        git.folder(pick[0]);
-        file.repos = pick[0];
-        sender.title = pick[0];
-        git.log(`Choose Repo ( ${pick[0]} )`);
-        app.user(file.user, file.token, pick[0]);
+    events: {
+      tapped: sender => {
+        animateOfRO(1);
+        $("left").info = 0;
       }
     }
   }
+  ]
 };
-
 
 if (env == $env.app) {
   $ui.render({
@@ -494,7 +560,15 @@ if (env == $env.app) {
       statusBarStyle: 0,
       navBarHidden: true
     },
-    views: [top, repos, RO, LG, login, roView]
+    views: [top, RO, LG, login, {
+      type: "view",
+      props: {
+        alpha: 0,
+        id: "leftBG",
+        bgcolor: $rgba(0, 0, 0, 0.5)
+      },
+      layout: $layout.fill
+    }, left]
   });
   init();
 }
@@ -554,27 +628,21 @@ function viewsAddShadows(view) {
 }
 
 
-function animateOfRO(sender, rotate) {
-  if (rotate) animationOfBackRotate(sender ? -180 : 180);
-  $("RO")
-    .animator.moveX(sender ? 130 : -130)
+function animateOfRO(rotate, once) {
+  if (!once) {
+    $("left").alpha = 1;
+    $("leftBG").alpha = 1;
+  }
+  let width = $device.info.screen.width;
+  $("left")
+    .animator.moveX(rotate ? -width : width)
     .easeBack.animateWithCompletion({
       duration: 0.4,
       completion: () => {
-        $("RObtn").info = !sender;
+        $("leftBG").animator.makeOpacity(rotate ? 1 : 0).animate(0.4);
+        if (!once) $("RO").animator.moveX(rotate ? 70 : -70).easeBack.animate(0.4);
       }
     });
-}
-function animateOfROTT() {
-  $("RO")
-    .animator.moveX(-10)
-    .thenAfter(0.1)
-    .moveX(10)
-    .thenAfter(0.2)
-    .moveX(-10)
-    .thenAfter(0.1)
-    .moveX(10)
-    .animate(0.4);
 }
 function animationOfLogin(alpha) {
   $ui.animate({
@@ -629,19 +697,6 @@ function animationOfFolderTips(alpha, handler) {
     },
     completion: handler
   });
-}
-function animationOfBackRotate(rotate, handle) {
-  $("RObtn")
-    .animator.rotate(rotate)
-    .easeOutBounce.animateWithCompletion({
-      duration: 1,
-      completion: async () => {
-        if (handle) {
-          await $wait(0.5);
-          if ($("back")) animationOfBackRotate();
-        }
-      }
-    });
 }
 
 // function folderTipsFlsh() {
@@ -705,8 +760,7 @@ async function init() {
   if (flag) {
     animationOfLogin(0);
     $delay(0.5, function () {
-      animateOfRO(true);
-      animationOfBackRotate(-90);
+      animateOfRO(0, 1);
     });
     // news = await git.folderCheck();
     // if (news.length) folderTipsFlsh();
