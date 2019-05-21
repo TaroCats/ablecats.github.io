@@ -630,15 +630,13 @@ function viewsAddShadows(view) {
 
 function animateOfRO(rotate) {
   let width = $device.info.screen.width;
-  $("left").animator.moveX(rotate ? -width : width).easeBack.animate(0.4);
   $("leftBG").animator.makeOpacity(rotate ? 1 : 0).animateWithCompletion({
-    duration: 0.4,
+    duration: 0.8,
     completion: () => {
       $("left").alpha = 1;
     }
   });
-  $("RO").animator.makeOpacity(rotate ? 0 : 1).animate(0.8);
-
+  $("left").animator.moveX(rotate ? -width : width).easeBack.animate(0.6);
 }
 function animationOfLogin(alpha) {
   $ui.animate({
