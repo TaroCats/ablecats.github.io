@@ -20,7 +20,7 @@ const roView = {
   layout: (make, view) => {
     viewsAddShadows(view);
     make.left.inset(10);
-    make.right.inset(90);
+    make.right.inset(70);
     make.height.equalTo(200);
     make.centerX.equalTo(view.super);
     make.top.equalTo($("reposBtn").top);
@@ -36,10 +36,10 @@ const repos = {
   },
   layout: function (make, view) {
     make.left.inset(10);
-    make.right.inset(90);
+    make.right.inset(70);
     make.height.equalTo(30);
     make.centerX.equalTo(view.super);
-    make.top.inset($device.isIphoneX ? 40 : 10);
+    make.top.inset($device.isIphoneX ? 60 : 30);
   },
   events: {
     tapped: async sender => {
@@ -186,7 +186,7 @@ const left = {
     layout: (make, view) => {
       make.size.equalTo($size(35, 35));
       make.centerY.equalTo(view.super);
-      make.left.inset(20);
+      make.left.inset(16.5);
     },
     events: {
       tapped: sender => animateOfRO(0, $("left").info)
@@ -199,7 +199,7 @@ const left = {
     layout: (make, view) => {
       make.width.equalTo(view.super);
       make.height.equalTo(view.super);
-      make.left.inset(80);
+      make.left.inset(68);
     },
     views: [repos, {
       type: "matrix",
@@ -270,7 +270,7 @@ const left = {
       },
       layout: (make, view) => {
         make.left.inset(10);
-        make.right.inset(90);
+        make.right.inset(70);
         make.height.equalTo(80);
         make.centerX.equalTo(view.super);
         make.top.equalTo(view.prev.bottom).offset(5);
