@@ -10,6 +10,101 @@ let file = app.user();
 $app.autoKeyboardEnabled = true;
 $app.keyboardToolbarEnabled = true;
 
+
+const matrix = {
+  type: "matrix",
+  props: {
+    square: 1,
+    columns: 4,
+    itemHeight: 50,
+    spacing: 5,
+    scrollEnabled: 0,
+    template: {
+      props: {},
+      views: [{
+        type: "view",
+        views: [{
+          type: "image",
+          props: {
+            id: "button",
+            bgcolor: $color("clear"),
+          },
+          layout: (make, view) => {
+            make.center.equalTo(view.super);
+          }
+        }, {
+          type: "label",
+          props: {
+            id: "label",
+            textColor: $color("black"),
+            align: $align.center,
+            font: $font(10)
+          },
+          layout: (make, view) => {
+            make.top.equalTo(view.prev.bottom).offset(5);
+            make.centerX.equalTo(view.super);
+          },
+        }],
+        layout: $layout.fill
+      }]
+    },
+    data: [{
+      button: {
+        icon: $icon("104", $color("black"), $size(30, 30))
+      },
+      label: {
+        text: "新建"
+      }
+    }, {
+      button: {
+        icon: $icon("204", $color("black"), $size(30, 30))
+      },
+      label: {
+        text: "添加"
+      }
+    }, {
+      button: {
+        icon: $icon("027", $color("black"), $size(30, 30))
+      },
+      label: {
+        text: "删除"
+      }
+    }, {
+      button: {
+        icon: $icon("008", $color("black"), $size(30, 30))
+      },
+      label: {
+        text: "问题"
+      }
+    }]
+  },
+  layout: (make, view) => {
+    make.left.inset(10);
+    make.right.inset(70);
+    make.height.equalTo(80);
+    make.centerX.equalTo(view.super);
+    make.top.equalTo(view.prev.bottom).offset(5);
+  },
+  events: {
+    didSelect: (sender, indexPath, data) => {
+      animationOfROView(1);
+      switch (indexPath.row) {
+        case 0:
+          viewAddNewItem(item.create);
+          break;
+        case 1:
+          viewAddNewItem(item.select);
+          break;
+        case 2:
+          viewAddNewItem(item.delete);
+          break;
+        case 3:
+          viewAddNewItem(item.issues);
+          break;
+      }
+    }
+  }
+};
 const roView = {
   type: "view",
   props: {
@@ -61,6 +156,7 @@ const repos = {
     }
   }
 };
+
 const login = {
   type: "blur",
   props: {
@@ -168,6 +264,15 @@ const login = {
   ],
   layout: $layout.fill
 };
+const blur = {
+  type: "view",
+  props: {
+    alpha: 0,
+    id: "leftBG",
+    bgcolor: $rgba(0, 0, 0, 0.5)
+  },
+  layout: $layout.fill
+};
 const left = {
   type: "view",
   props: {
@@ -201,100 +306,7 @@ const left = {
       make.height.equalTo(view.super);
       make.left.inset(68);
     },
-    views: [repos, {
-      type: "matrix",
-      props: {
-        square: 1,
-        columns: 4,
-        itemHeight: 50,
-        spacing: 5,
-        scrollEnabled: 0,
-        template: {
-          props: {},
-          views: [{
-            type: "view",
-            views: [{
-              type: "image",
-              props: {
-                id: "button",
-                bgcolor: $color("clear"),
-              },
-              layout: (make, view) => {
-                make.center.equalTo(view.super);
-              }
-            }, {
-              type: "label",
-              props: {
-                id: "label",
-                textColor: $color("black"),
-                align: $align.center,
-                font: $font(10)
-              },
-              layout: (make, view) => {
-                make.top.equalTo(view.prev.bottom).offset(5);
-                make.centerX.equalTo(view.super);
-              },
-            }],
-            layout: $layout.fill
-          }]
-        },
-        data: [{
-          button: {
-            icon: $icon("104", $color("black"), $size(30, 30))
-          },
-          label: {
-            text: "新建"
-          }
-        }, {
-          button: {
-            icon: $icon("204", $color("black"), $size(30, 30))
-          },
-          label: {
-            text: "添加"
-          }
-        }, {
-          button: {
-            icon: $icon("027", $color("black"), $size(30, 30))
-          },
-          label: {
-            text: "删除"
-          }
-        }, {
-          button: {
-            icon: $icon("008", $color("black"), $size(30, 30))
-          },
-          label: {
-            text: "问题"
-          }
-        }]
-      },
-      layout: (make, view) => {
-        make.left.inset(10);
-        make.right.inset(70);
-        make.height.equalTo(80);
-        make.centerX.equalTo(view.super);
-        make.top.equalTo(view.prev.bottom).offset(5);
-      },
-      events: {
-        didSelect: (sender, indexPath, data) => {
-          animationOfROView(1);
-          switch (indexPath.row) {
-            case 0:
-              viewAddNewItem(item.create);
-              break;
-            case 1:
-              viewAddNewItem(item.select);
-              break;
-            case 2:
-              viewAddNewItem(item.delete);
-              break;
-            case 3:
-              viewAddNewItem(item.issues);
-              break;
-          }
-        }
-      }
-    }, roView]
+    views: [repos, matrix, roView]
   }],
   layout: $layout.fill,
 };
@@ -560,15 +572,7 @@ if (env == $env.app) {
       statusBarStyle: 0,
       navBarHidden: true
     },
-    views: [top, RO, LG, login, {
-      type: "view",
-      props: {
-        alpha: 0,
-        id: "leftBG",
-        bgcolor: $rgba(0, 0, 0, 0.5)
-      },
-      layout: $layout.fill
-    }, left]
+    views: [top, RO, LG, login, blur     , left]
   });
   init();
 }
