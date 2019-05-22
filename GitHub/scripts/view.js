@@ -311,71 +311,68 @@ const left = {
   layout: $layout.fill,
 };
 
-const logs = [
-  {
-    title: "logs",
-    rows: [
-      {
-        type: "view",
-        views: [
-          {
-            type: "list",
-            props: {
-              id: "logs",
-              rowHeight: 20,
-              bgcolor: $color("#F5F5F5"),
-              separatorHidden: false,
-              template: {
-                props: {
-                  font: $font(12),
-                  bgcolor: $color("clear")
-                }
+const logs = {
+  title: "logs",
+  rows: [
+    {
+      type: "view",
+      views: [
+        {
+          type: "list",
+          props: {
+            id: "logs",
+            rowHeight: 20,
+            bgcolor: $color("#F5F5F5"),
+            separatorHidden: false,
+            template: {
+              props: {
+                font: $font(12),
+                bgcolor: $color("clear")
               }
-            },
-            events: {
-              didSelect: (sender, indexPath, data) => {
-                animationOflistBlur(1);
-                $("text").text = data.replace(": ", "\n\n");
-              }
-            },
-            layout: (make, view) => {
-              viewsAddShadows(view);
-              make.edges.insets($insets(10, 20, 0, 20));
             }
           },
-          {
-            type: "blur",
-            props: {
-              id: "listBlur",
-              alpha: 0,
-              style: 1
-            },
-            views: [
-              {
-                type: "text",
-                props: {
-                  editable: 0,
-                  selectable: 0,
-                  align: $align.center,
-                  insets: $insets(20, 5, 20, 5)
-                },
-                layout: $layout.fill
-              }
-            ],
-            layout: $layout.fill,
-            events: {
-              tapped: async sender => {
-                animationOflistBlur(0);
-              }
+          events: {
+            didSelect: (sender, indexPath, data) => {
+              animationOflistBlur(1);
+              $("text").text = data.replace(": ", "\n\n");
+            }
+          },
+          layout: (make, view) => {
+            viewsAddShadows(view);
+            make.edges.insets($insets(10, 20, 0, 20));
+          }
+        },
+        {
+          type: "blur",
+          props: {
+            id: "listBlur",
+            alpha: 0,
+            style: 1
+          },
+          views: [
+            {
+              type: "text",
+              props: {
+                editable: 0,
+                selectable: 0,
+                align: $align.center,
+                insets: $insets(20, 5, 20, 5)
+              },
+              layout: $layout.fill
+            }
+          ],
+          layout: $layout.fill,
+          events: {
+            tapped: async sender => {
+              animationOflistBlur(0);
             }
           }
-        ],
-        layout: $layout.fill
-      }
-    ]
-  }
-];
-
+        }
+      ],
+      layout: $layout.fill
+    }
+  ]
+};
 const top = {
   type: "view",
   props: {
@@ -510,7 +507,7 @@ const LG = {
   type: "list",
   props: {
     id: "LG",
-    data: logs,
+    data: [logs],
     scrollEnabled: 0,
     bgcolor: $color("clear"),
     separatorHidden: true
@@ -572,7 +569,7 @@ if (env == $env.app) {
       statusBarStyle: 0,
       navBarHidden: true
     },
-    views: [top, RO, LG, login, blur     , left]
+    views: [top, RO, LG, login, blur, left]
   });
   init();
 }
