@@ -264,7 +264,7 @@ const left = {
             icon: $icon("008", $color("black"), $size(30, 30))
           },
           label: {
-            text: "提交"
+            text: "问题"
           }
         }]
       },
