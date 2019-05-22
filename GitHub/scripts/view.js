@@ -574,6 +574,36 @@ if (env == $env.app) {
   init();
 }
 
+function findNewFolder(sender) {
+  $ui.action({
+    title: "News",
+    message: "found a new repos option",
+    actions: [
+      {
+        title: "create repos",
+        disabled: false, // Optional
+        handler: () => {
+          animationOfFolderTips(0);
+          sender.userInteractionEnabled = false;
+          $delay(3, () => animationOfFolderTips(0));
+          news.map(async v => {
+            await git.creatRepos(v);
+            await git.syncToPath(v);
+          });
+        }
+      },
+      {
+        title: "ignore option",
+        handler: () => {
+          animationOfFolderTips(0);
+          sender.userInteractionEnabled = false;
+          $delay(3, () => animationOfFolderTips(0));
+        }
+      }
+    ]
+  });
+}
+
 function viewAddNewItem(item) {
   $("ROView").add({
     type: "view",
@@ -612,7 +642,6 @@ function viewAddNewItem(item) {
     ]
   });
 }
-
 function viewsAddShadows(view) {
   //在layout中使用即可 给Views添加阴影
   var layer = view.runtimeValue().invoke("layer");
@@ -627,7 +656,6 @@ function viewsAddShadows(view) {
       .invoke("CGColor")
   );
 }
-
 
 function animateOfRO(rotate) {
   let width = $device.info.screen.width;
@@ -691,49 +719,6 @@ function animationOfFolderTips(alpha, handler) {
       $("newReposTip").alpha = alpha;
     },
     completion: handler
-  });
-}
-
-// function folderTipsFlsh() {
-//   $("icon").userInteractionEnabled = true;
-//   animationOfFolderTips(1, () => {
-//     animationOfFolderTips(0, () => {
-//       animationOfFolderTips(1, () => {
-//         animationOfFolderTips(0, () => {
-//           animationOfFolderTips(1);
-//         });
-//       });
-//     });
-//   });
-// }
-
-function findNewFolder(sender) {
-  $ui.action({
-    title: "News",
-    message: "found a new repos option",
-    actions: [
-      {
-        title: "create repos",
-        disabled: false, // Optional
-        handler: () => {
-          animationOfFolderTips(0);
-          sender.userInteractionEnabled = false;
-          $delay(3, () => animationOfFolderTips(0));
-          news.map(async v => {
-            await git.creatRepos(v);
-            await git.syncToPath(v);
-          });
-        }
-      },
-      {
-        title: "ignore option",
-        handler: () => {
-          animationOfFolderTips(0);
-          sender.userInteractionEnabled = false;
-          $delay(3, () => animationOfFolderTips(0));
-        }
-      }
-    ]
   });
 }
 
