@@ -6,12 +6,181 @@ let item = require("scripts/item.js");
 let lottie = require("scripts/lottie.js");
 
 let file = app.user();
+git = new app.git();
+git.log();
 
 $app.autoKeyboardEnabled = true;
 $app.keyboardToolbarEnabled = true;
-
-
-const matrix = {
+const bottomHandle = {
+  type: "matrix",
+  props: {
+    columns: 1,
+    itemHeight: 35,
+    spacing: 10,
+    scrollEnabled: 0,
+    template: {
+      props: {
+        radius: 10,
+        bgcolor: $color("black")
+      },
+      views: [{
+        type: "view",
+        views: [{
+          type: "image",
+          props: {
+            id: "button",
+            bgcolor: $color("clear"),
+          },
+          layout: (make, view) => {
+            make.left.inset(10);
+            make.centerY.equalTo(view.super);
+          }
+        }, {
+          type: "label",
+          props: {
+            id: "label",
+            textColor: $color("white"),
+            align: $align.center,
+            font: $font(15)
+          },
+          layout: (make, view) => {
+            make.centerY.equalTo(view.super);
+            make.left.equalTo(view.prev.right).offset(5);
+          },
+        }],
+        layout: (make, view) => {
+          make.width.equalTo(100);
+          make.center.equalTo(view.super);
+        },
+      }]
+    },
+    data: [{
+      button: {
+        icon: $icon("109", $color("white"), $size(20, 20))
+      },
+      label: {
+        text: "用户管理"
+      }
+    }, {
+      button: {
+        icon: $icon("225", $color("white"), $size(20, 20))
+      },
+      label: {
+        text: "退出应用"
+      }
+    }]
+  },
+  layout: (make, view) => {
+    make.left.inset(10);
+    make.right.inset(70);
+    make.bottom.inset(20);
+    make.height.equalTo(100);
+    make.centerX.equalTo(view.super);
+  },
+  events: {
+    didSelect: async (sender, indexPath, data) => {
+      animateOfRO(0, $("left").info)
+      if (file.repos) {
+        switch (indexPath.row) {
+          case 0:
+            sender.userInteractionEnabled = false;
+            await git.syncToPath(file.repos);
+            sender.userInteractionEnabled = true;
+            break;
+          case 1:
+            lottie.wait();
+            sender.userInteractionEnabled = false;
+            await git.syncToCloud(file.repos);
+            sender.userInteractionEnabled = true;
+            lottie.lottieStop();
+            break;
+        }
+      } else git.log("Please Choose Repos..");
+    }
+  }
+};
+const modifyHandle = {
+  type: "matrix",
+  props: {
+    columns: 2,
+    itemHeight: 50,
+    spacing: 5,
+    scrollEnabled: 0,
+    template: {
+      props: {},
+      views: [{
+        type: "view",
+        views: [{
+          type: "image",
+          props: {
+            id: "button",
+            bgcolor: $color("clear"),
+          },
+          layout: (make, view) => {
+            make.center.equalTo(view.super);
+          }
+        }, {
+          type: "label",
+          props: {
+            id: "label",
+            textColor: $color("black"),
+            align: $align.center,
+            font: $font(10)
+          },
+          layout: (make, view) => {
+            make.top.equalTo(view.prev.bottom).offset(5);
+            make.centerX.equalTo(view.super);
+          },
+        }],
+        layout: $layout.fill
+      }]
+    },
+    data: [{
+      button: {
+        icon: $icon("166", $color("black"), $size(40, 40))
+      },
+      label: {
+        text: "上传"
+      }
+    }, {
+      button: {
+        icon: $icon("165", $color("black"), $size(40, 40))
+      },
+      label: {
+        text: "下载"
+      }
+    }]
+  },
+  layout: (make, view) => {
+    make.left.inset(10);
+    make.right.inset(70);
+    make.height.equalTo(80);
+    make.centerX.equalTo(view.super);
+    make.top.equalTo(view.prev.bottom).offset(5);
+  },
+  events: {
+    didSelect: async (sender, indexPath, data) => {
+      animateOfRO(0, $("left").info)
+      if (file.repos) {
+        switch (indexPath.row) {
+          case 0:
+            sender.userInteractionEnabled = false;
+            await git.syncToPath(file.repos);
+            sender.userInteractionEnabled = true;
+            break;
+          case 1:
+            lottie.wait();
+            sender.userInteractionEnabled = false;
+            await git.syncToCloud(file.repos);
+            sender.userInteractionEnabled = true;
+            lottie.lottieStop();
+            break;
+        }
+      } else git.log("Please Choose Repos..");
+    }
+  }
+};
+const reposHandle = {
   type: "matrix",
   props: {
     square: 1,
@@ -306,7 +475,7 @@ const left = {
       make.height.equalTo(view.super);
       make.left.inset(68);
     },
-    views: [repos, matrix, roView]
+    views: [repos, reposHandle, modifyHandle, roView, bottomHandle]
   }],
   layout: $layout.fill,
 };
@@ -383,125 +552,51 @@ const top = {
     make.left.right.inset(10);
     make.top.inset($device.isIphoneX ? 40 : 10);
   },
-  views: [
-    {
-      type: "label",
-      props: {
-        text: "GitHub",
-        align: $align.left,
-        font: $font("bold", 35)
-      },
-      layout: (make, view) => {
-        make.width.equalTo(120);
-        make.top.left.inset(0);
-        make.centerY.equalTo(view.super);
-      }
+  views: [{
+    type: "label",
+    props: {
+      text: "GitHub",
+      align: $align.left,
+      font: $font("bold", 35)
     },
-    {
-      type: "button",
-      props: {
-        id: "icon",
-        bgcolor: $color("clear"),
-        userInteractionEnabled: false,
-        icon: $icon("177", $color("black"), $size(35, 35))
-      },
-      layout: (make, view) => {
-        make.centerY.equalTo(view.super);
-        make.left.equalTo(view.prev.right);
-      },
-      events: {
-        tapped: async sender => {
-          findNewFolder(sender);
-        }
-      }
+    layout: (make, view) => {
+      make.width.equalTo(120);
+      make.top.left.inset(0);
+      make.centerY.equalTo(view.super);
+    }
+  },
+  {
+    type: "button",
+    props: {
+      id: "icon",
+      bgcolor: $color("clear"),
+      userInteractionEnabled: false,
+      icon: $icon("177", $color("black"), $size(35, 35))
     },
-    {
-      type: "view",
-      props: {
-        alpha: 0,
-        circular: 1,
-        id: "newReposTip",
-        bgcolor: $color("red")
-      },
-      layout: (make, view) => {
-        make.size.equalTo($size(6, 6));
-        make.top.equalTo(view.prev.top);
-        make.left.equalTo(view.prev.right);
-      }
+    layout: (make, view) => {
+      make.centerY.equalTo(view.super);
+      make.left.equalTo(view.prev.right);
     },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("225", $color("black"), $size(25, 25)) //关闭
-      },
-      layout: (make, view) => {
-        make.right.inset(0);
-        make.centerY.equalTo(view.super);
-      },
-      events: {
-        tapped: () => {
-          $app.close();
-        }
-      }
-    },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("165", $color("blac"), $size(30, 30)) //下载
-      },
-      layout: (make, view) => {
-        make.centerY.equalTo(view.super);
-        make.right.equalTo(view.prev.left).offset(-10);
-      },
-      events: {
-        tapped: async sender => {
-          if (file.repos) {
-            lottie.wait();
-            sender.userInteractionEnabled = false;
-            await git.syncToCloud(file.repos);
-            sender.userInteractionEnabled = true;
-            lottie.lottieStop();
-          } else git.log("Please Choose Repos..");
-        }
-      }
-    },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("166", $color("black"), $size(30, 30)) //上传
-      },
-      layout: (make, view) => {
-        make.centerY.equalTo(view.super);
-        make.right.equalTo(view.prev.left).offset(-10);
-      },
-      events: {
-        tapped: async sender => {
-          if (file.repos) {
-            sender.userInteractionEnabled = false;
-            await git.syncToPath(file.repos);
-            sender.userInteractionEnabled = true;
-          } else git.log("Please Choose Repos..");
-        }
-      }
-    },
-    {
-      type: "button",
-      props: {
-        bgcolor: $color("clear"),
-        icon: $icon("109", $color("black"), $size(25, 25)) //登陆
-      },
-      layout: (make, view) => {
-        make.centerY.equalTo(view.super);
-        make.right.equalTo(view.prev.left).offset(-10);
-      },
-      events: {
-        tapped: async sender => animationOfLogin(1)
+    events: {
+      tapped: async sender => {
+        findNewFolder(sender);
       }
     }
-  ]
+  },
+  {
+    type: "view",
+    props: {
+      alpha: 0,
+      circular: 1,
+      id: "newReposTip",
+      bgcolor: $color("red")
+    },
+    layout: (make, view) => {
+      make.size.equalTo($size(6, 6));
+      make.top.equalTo(view.prev.top);
+      make.left.equalTo(view.prev.right);
+    }
+  }]
 };
 const LG = {
   type: "list",
@@ -603,7 +698,6 @@ function findNewFolder(sender) {
     ]
   });
 }
-
 function viewAddNewItem(item) {
   $("ROView").add({
     type: "view",
@@ -723,8 +817,6 @@ function animationOfFolderTips(alpha, handler) {
 }
 
 async function init() {
-  git = new app.git();
-  git.log();
 
   $("logs").data = JSON.parse($file.read("/log").string);
 
