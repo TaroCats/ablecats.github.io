@@ -91,71 +91,69 @@ function foundNewVer(log) {
                     make.left.right.inset(0);
                 }
             }, {
-                type: "button",
+                type: "matrix",
                 props: {
-                    title: "Yes",
-                    font: $font("bold", 20),
-                    bgcolor: $color("clear"),
-                    titleColor: $color("black")
-                },
-                layout: (make, view) => {
-                    make.height.equalTo(70);
-                    make.left.bottom.inset(0);
-                    make.width.equalTo(view.prev.width).multipliedBy(0.5);
-                },
-                events: {
-                    tapped: (sender) => $http.download({
-                        url: `https://raw.githubusercontent.com/AbleCats/ablecats.github.io/master/Releases/${appName}.box`,
-                        handler: function (resp) {
-                            if (!isCheck) {
-                                isCheck = true;
-                                $addin.save({
-                                    name: $addin.current.name,
-                                    data: resp.data,
-                                    handler: function (success) {
-                                        $device.taptic(2);
-                                        if (success) $file.delete("Version");
-                                        $ui.alert({
-                                            title: "Success",
-                                            actions: [{
-                                                title: "OK",
-                                                handler: () => {
-                                                    $addin.restart();
-                                                }
-                                            }]
-                                        });
-                                    }
-                                })
-                            }
-                        }
-                    })
-                }
-            }, {
-                type: "button",
-                props: {
-                    title: "No",
-                    font: $font("bold", 20),
-                    bgcolor: $color("clear"),
-                    titleColor: $color("black")
+                    columns: 3,
+                    spacing: 1,
+                    waterfall: true,
+                    scrollEnabled: 0,
+                    template: {
+                        views: [{
+                            type: "label",
+                            props: {
+                                id: "label",
+                                bgcolor: $color("clear"),
+                                align: $align.center,
+                                font: $font("bold", 20),
+                            },
+                            layout: $layout.fill
+                        }]
+                    },
+                    data: ["Yes", "|", "No"].map(v => { return { label: { text: v } } })
                 },
                 layout: (make, view) => {
                     make.height.equalTo(50);
-                    make.right.bottom.inset(0);
-                    make.width.equalTo(view.prev.width);
+                    make.left.right.bottom.inset(0);
                 },
                 events: {
-                    tapped: (sender) => animate(0)
-                }
-            }, {
-                type: "view",
-                props: {
-                    bgcolor: $color("black")
-                },
-                layout: (make, view) => {
-                    make.bottom.inset(12);
-                    make.width.equalTo(0.5);
-                    make.height.equalTo(24);
-                    make.centerX.equalTo(view.super);
+                    itemSize: (sender, indexPath) => {
+                        return $size(100, 40);
+                    },
+                    didSelect: (sender, indexPath, data) => {
+                        switch (indexPath.row) {
+                            case 0:
+                                sender.selectable = 0;
+                                $http.download({
+                                    url: `https://raw.githubusercontent.com/AbleCats/ablecats.github.io/master/Releases/${appName}.box`,
+                                    handler: function (resp) {
+                                        if (!isCheck) {
+                                            isCheck = true;
+                                            $addin.save({
+                                                name: $addin.current.name,
+                                                data: resp.data,
+                                                handler: function (success) {
+                                                    $device.taptic(2);
+                                                    if (success) $file.delete("Version");
+                                                    $ui.alert({
+                                                        title: "Success",
+                                                        actions: [{
+                                                            title: "OK",
+                                                            handler: () => {
+                                                                $addin.restart();
+                                                            }
+                                                        }]
+                                                    });
+                                                }
+                                            })
+                                        }
+                                    }
+                                });
+                                break;
+                            case 2:
+                                animate(0)
+                                break;
+                        }
+                    }
                 }
             }]
         }],
@@ -199,6 +197,7 @@ function shadows(view) {
 function date() {
     return new Date().getTime();
 }
+
 module.exports = {
     update: update,
 };

@@ -396,8 +396,8 @@ const thrView = {
 };
 
 async function makeDate(page) {
-  if (!$("input").text) return;
   $("input").blur();
+  if (!$("input").text) return;
   $("inputDisable").hidden = 1;
   animateOflogView("数据加载中...");
 
@@ -446,9 +446,9 @@ function player(script, handle) {
 function animateOflogView(log) {
   $("log").text = log;
   $("logView").animator.makeY(0)
-    .moveY(80).makeOpacity(1)
+    .moveY(85).makeOpacity(1)
     .thenAfter(1.0).wait(1.2)
-    .moveY(-80).makeOpacity(0)
+    .moveY(-85).makeOpacity(0)
     .animate(0.6);
 }
 function animateOfthrView(s) {
