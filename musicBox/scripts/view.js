@@ -1,9 +1,7 @@
 let env = $app.env;
-let app = require("./app.js.js");
+let app = require("./app.js");
 let phone = $device.isIphoneX;
 let platform = ["qq", "netease", "kugou", "kuwo", "xiami"];
-
-
 
 const filter = {
   type: "matrix",
@@ -401,12 +399,14 @@ async function makeDate(page) {
   if (!$("input").text) return;
   $("input").blur();
   $("inputDisable").hidden = 1;
-  animateOflogView("数据加载中...")
-  let history = $cache.get("history"); console.log(history);
+  animateOflogView("数据加载中...");
+
+  let history = $cache.get("history");
   let res = await app.api($("filter").info, page ? page : 1, $("input").text, "name");
 
+  let data = deal(res.data);
   $("songList").endFetchingMore();
-  $("songList").data = history == $("input").text ? $("songList").data.concat(deal(res.data)) : deal(res.data);
+  $("songList").data = history == $("input").text ? $("songList").data.concat(data) : data;
 };
 
 function deal(data) {

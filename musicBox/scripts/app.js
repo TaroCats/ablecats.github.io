@@ -1,10 +1,5 @@
 async function api(type, page, input, filter) {
-  console.log({
-    type: type, //qq wy _
-    page: page,
-    input: input,
-    filter: filter //id url name
-  })
+  console.log(input);
   let res = await $http.request({
     method: "POST",
     url: "http://www.jbsou.cn/",
