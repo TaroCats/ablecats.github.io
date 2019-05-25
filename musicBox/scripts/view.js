@@ -1,3 +1,4 @@
+let c = 0;
 let env = $app.env;
 let app = require("./app.js");
 let phone = $device.isIphoneX;
@@ -387,6 +388,7 @@ const thrView = {
   },
   events: {
     log: (res) => {
+      c = res.count;
       animateOflogView(`正在播放： ${res.text}`);
     },
     test: (object) => {
@@ -445,10 +447,11 @@ function player(script, handle) {
 }
 function animateOflogView(log) {
   $("log").text = log;
+  let h = $("subView").info;
   $("logView").animator.makeY(0)
-    .moveY(85).makeOpacity(1)
+    .moveY(h ? 40 : 85).makeOpacity(1)
     .thenAfter(1.0).wait(1.2)
-    .moveY(-85).makeOpacity(0)
+    .moveY(h ? -40 : -85).makeOpacity(0)
     .animate(0.6);
 }
 function animateOfthrView(s) {
@@ -457,10 +460,23 @@ function animateOfthrView(s) {
   $("subView")
     .animator.moveY(turn ? -230 : 230)
     .animate(0.4);
-  if (phone)
+  if (phone) {
+    $("songList")
+      .animator.moveY(turn ? 170 : -170)
+      .moveHeight(turn ? -160 : 160)
+      .anchorTop
+      .animate(0.4);
     $("subViewTurn")
       .animator.moveY(turn ? 10 : -10)
       .animate(0.4);
+  }
+  else
+    $("songList")
+      .animator.moveY(turn ? 140 : -140)
+      .moveHeight(turn ? -130 : 130)
+      .anchorTop
+      .animate(0.4);
+
 }
 function animateOfSearchBar(s) {
 
