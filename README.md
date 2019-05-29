@@ -5,7 +5,7 @@ This is the Repo for the AbleCats release resource
 
 ## There is more to come...  
 
-`
+```
 if (directory != directoryRoot) {
         // Sync as package
         if (!fs.existsSync(path.join(directory, '..', 'Releases'))) {
@@ -30,4 +30,4 @@ if (directory != directoryRoot) {
             }
         });
 }
-`
+```
