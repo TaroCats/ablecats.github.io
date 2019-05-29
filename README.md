@@ -5,7 +5,6 @@ This is the Repo for the AbleCats release resource
 
 ## There is more to come...  
 
-`
 if (directory != directoryRoot) {
         // Sync as package
         if (!fs.existsSync(path.join(directory, '..', 'Releases'))) {
@@ -26,11 +25,7 @@ if (directory != directoryRoot) {
 
                 fsHash.update(buffer);
                 var md5 = fsHash.digest('hex');
-                fs.writeFile(path.resolve(directory, '..', 'Releases', `${name}Version`), JSON.stringify({ "data": md5 }), function (err) {
-
-                });
+                fs.writeFile(path.resolve(directory, '..', 'Releases', `${name}Version`), JSON.stringify({ "data": md5 }), function (err) {});
             }
         });
-    }
-    
-    `
+}
