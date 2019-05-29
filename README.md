@@ -6,6 +6,13 @@ This is the Repo for the AbleCats release resource
 ## There is more to come...  
 
 ## JSBOX For VSCode Fixed
+
+### Path
+os	path 
+windows	%USERPROFILE%\.vscode\extensions\out\extension.js
+macOS	~/.vscode/extensions/out/extension.js
+Linux	~/.vscode/extensions/out/extension.js
+### Code
 ```
 if (directory != directoryRoot) {
         // Sync as package
