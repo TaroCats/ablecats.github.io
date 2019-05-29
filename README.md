@@ -10,9 +10,9 @@ This is the Repo for the AbleCats release resource
 ### Path
 ```
 os	path 
-windows	%USERPROFILE%\.vscode\extensions\out\extension.js
 macOS	~/.vscode/extensions/out/extension.js
 Linux	~/.vscode/extensions/out/extension.js
+windows	%USERPROFILE%\.vscode\extensions\out\extension.js
 ```
 ### Code
 ```
