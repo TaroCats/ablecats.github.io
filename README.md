@@ -5,6 +5,7 @@ This is the Repo for the AbleCats release resource
 
 ## There is more to come...  
 
+## JSBOX For VSCode Fixed
 ```
 if (directory != directoryRoot) {
         // Sync as package
@@ -12,7 +13,7 @@ if (directory != directoryRoot) {
             fs.mkdirSync(path.join(directory, '..', 'Releases'));
         }
         var name = path.basename(directory);
-        var target = path.resolve(directory, '..', 'Releases', \`${name}.box\`);
+        var target = path.resolve(directory, '..', 'Releases', `${name}.box`);
 
         require('zip-folder')(directory, target, error => {
             if (error) {
@@ -26,7 +27,7 @@ if (directory != directoryRoot) {
 
                 fsHash.update(buffer);
                 var md5 = fsHash.digest('hex');
-                fs.writeFile(path.resolve(directory, '..', 'Releases', \`${name}Version\`), JSON.stringify({ "data": md5 }), function (err) {});
+                fs.writeFile(path.resolve(directory, '..', 'Releases', `${name}Version`), JSON.stringify({ "data": md5 }), function (err) {});
             }
         });
 }
