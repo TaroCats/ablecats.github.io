@@ -518,6 +518,4 @@ if (env == $env.app) {
   $delay(0.3, () => {
     animateOflogView("初始化完成!");
   });
-}
-
-module.exports = {};
+};

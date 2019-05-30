@@ -1,0 +1,9 @@
+{
+	"app": "1.3.7.4",
+	"scripts": [
+		"UIViews.js",
+		"socketLogger.js",
+		"rainbowText.html",
+		"video/index.html"
+	]
+}
