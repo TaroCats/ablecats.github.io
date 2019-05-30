@@ -4,6 +4,8 @@ let app = require("./app.js");
 let phone = $device.isIphoneX;
 let platform = ["qq", "netease", "kugou", "kuwo", "xiami"];
 
+let cv = require("./catsViews/UIViews.js");
+
 const filter = {
   type: "matrix",
   props: {
