@@ -197,7 +197,7 @@ const searchBar = {
   props: {
     radius: 20,
     id: "searchBar",
-    bgcolor: $rgba(192, 192, 192, 0.3)
+    bgcolor: $color("white")//$rgba(192, 192, 192, 0.3)
   },
   layout: (make, view) => {
     make.height.equalTo(40);
