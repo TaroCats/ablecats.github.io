@@ -40,7 +40,9 @@ const file = $file.read('scripts/catsViews/socketLogger.js');
 const path = $file.read("scripts/catsViews/version.json").string;
 
 $app.info.version >= "1.29.0" && host && file ? require('./socketLogger').init(host, '44555', true, true) : 0;
-
+function date() {
+    return new Date().getTime();
+}
 function viewsAddShadows(view, radius) { //在layout中使用即可 给Views添加阴影
     var layer = view.runtimeValue().invoke("layer");
     layer.invoke("setShadowRadius", 5);
