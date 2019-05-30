@@ -314,71 +314,9 @@ function showToastView(viewsid, iconColor, text, duration) {
     })
 }
 
-class Analysis {
-    constructor(appId, appKey) {
-        this.appId = appId;
-        this.appKey = appKey;
-    }
-    count(handler) {
-        $http.request({
-            method: "GET",
-            url: `https://${this.appId.slice(0, 7)}.api.lncld.net/1.1/installations?count=1&limit=0`,
-            timeout: 5,
-            header: {
-                "Content-Type": "application/json",
-                "X-LC-Id": this.appId,
-                "X-LC-Key": this.appKey,
-            },
-            handler: handler
-        })
-    }
-    upload(appVersion) {
-        let info = {
-            addinVersion: appVersion,
-            iosVersion: $device.info.version,
-            jsboxVersion: $app.info.version,
-            deviceType: "ios",
-            deviceToken: $objc("FCUUID").invoke("uuidForDevice").rawValue()
-        };
-        let path = 'scripts/CatsViews/info';
-        $file.exists(path) ? 0 : $file.mkdir(path);
-        let info_pre = $file.read(`${path}/info`);
-
-        if (!info_pre || isDifferent(info, JSON.parse(info_pre.string))) {
-            $file.write({
-                data: $data({ "string": JSON.stringify(info) }),
-                path: `${path}/info`
-            });
-            $http.request({
-                method: "POST",
-                url: `https://${this.appId.slice(0, 7)}.api.lncld.net/1.1/installations`,
-                timeout: 5,
-                header: {
-                    "Content-Type": "application/json",
-                    "X-LC-Id": this.appId,
-                    "X-LC-Key": this.appKey,
-                },
-                body: info,
-                handler: (resp) => {
-                }
-            })
-        }
-
-        function isDifferent(info, info_pre) {
-            if (info == undefined || info_pre == undefined) {
-                return true
-            } else if (info.addinVersion != info_pre.addinVersion || info.iosVersion != info_pre.iosVersion || info.jsboxVersion != info_pre.jsboxVersion || info.deviceToken != info_pre.deviceToken) {
-                return true
-            } else {
-                return false
-            }
-        }
-    }
-}
-
-async function updateCheck() {
+(async function () {
     async function record(n) {
-        let res = await download(`http://js.able.cat/CatsViews/${n}`);
+        let res = await download(`https://raw.githubusercontent.com/AbleCats/ablecats.github.io/master/catsViews/${n}?t=${date()}`);
         res.data ? writeFiles(res.data, `scripts/CatsViews/${n}`) : false;
     }
     async function download(url) {
@@ -424,10 +362,8 @@ async function updateCheck() {
     ready();
     clearCache();
 
-    console.warn(`CatsViews has been required.`);
-    console.warn(`The current PathVer is V${parse(path).app}`);
-    let object = await download("http://js.able.cat/CatsViews/version.json");
-    console.warn(`The current CloudVer is V${parse(object.data.string).app}`);
+    console.warn(`catsViews has been required.`);
+    let object = await download(`https://raw.githubusercontent.com/AbleCats/ablecats.github.io/master/catsViews/version.json?t=${date()}`);
     if (object.data) {
         let string = object.data.string;
         if (parse(string).app > parse(path).app) {
@@ -435,19 +371,12 @@ async function updateCheck() {
             for (let o of parse(string).scripts) {
                 record(o)
             }
-            writeFiles(object.data, "scripts/CatsViews/version.json");
+            writeFiles(object.data, "scripts/catsViews/version.json");
             console.warn("CatsViews更新完成...");
             checkCallBack();
         }
     }
-    console.warn(`CatsViews Powered by AbleCats.`);
-    let install = new Analysis("qsbtAEnqOANQ34WxXFQjKxt8-gzGzoHsz", "wtWCPgKxAojr5nWYsG2TDbiY");
-    install.upload(JSON.parse(path).app);
-    install.count((resp) => {
-        console.warn(`There are already ${resp.data.count} projects using CatsViews.`);
-    });
-}
-updateCheck();
+})();
 
 module.exports = {
     add: addViewWithAnimatiom,  // (mviews, cviews, viewsid)
