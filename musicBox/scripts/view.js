@@ -294,7 +294,7 @@ const logView = {
     bgcolor: $color("white")
   },
   layout: (make, view) => {
-    make.top.equalTo(0);
+    make.bottom.inset(0);
     make.height.equalTo(40);
     make.left.right.inset(40);
     viewsAddShadows(view, $size(3, 3));
@@ -449,11 +449,11 @@ function player(script, handle) {
 }
 function animateOflogView(log) {
   $("log").text = log;
-  let h = $("subView").info;
-  $("logView").animator.makeY(0)
-    .moveY(h ? 40 : 85).makeOpacity(1)
+  let h = $device.info.screen.height;
+  $("logView").animator
+    .moveY(-20).makeOpacity(1)
     .thenAfter(1.0).wait(1.2)
-    .moveY(h ? -40 : -85).makeOpacity(0)
+    .moveY(20).makeOpacity(0)
     .animate(0.6);
 }
 function animateOfthrView(s) {
