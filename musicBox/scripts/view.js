@@ -404,7 +404,7 @@ async function makeDate(page) {
   $("inputDisable").hidden = 1;
   if (!$("input").text && !page) return;
   animateOflogView("数据加载中...");
-  
+
   let history = $cache.get("history");
   $("input").text = $("input").text ? $("input").text : history.search
   let res = await app.api($("filter").info, page ? page : 1, $("input").text, "name");
@@ -508,7 +508,7 @@ function viewsAddShadows(view, size) {
   );
 }
 
-if (env == $env.app) {
+if (env == $env.app) (async () => {
   $ui.render({
     props: {
       id: "mainView",
@@ -521,4 +521,4 @@ if (env == $env.app) {
   $delay(0.3, () => {
     animateOflogView("初始化完成!");
   });
-};
+})();
