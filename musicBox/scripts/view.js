@@ -401,11 +401,12 @@ const thrView = {
 
 async function makeDate(page) {
   $("input").blur();
-  if (!$("input").text) return;
   $("inputDisable").hidden = 1;
+  if (!$("input").text && !page) return;
   animateOflogView("数据加载中...");
-
+  
   let history = $cache.get("history");
+  $("input").text = $("input").text ? $("input").text : history.search
   let res = await app.api($("filter").info, page ? page : 1, $("input").text, "name");
 
   let data = deal(res.data);
