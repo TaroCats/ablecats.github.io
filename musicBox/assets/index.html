@@ -28,7 +28,12 @@
         lrcType: 1,
     });
     ap.on('play', () => {
-        $notify("log", { "text": ap.list.audios[ap.list.index].name, "count": ap.list.audios.length });
+        $notify("log", { "text": `正在播放： ${ap.list.audios[ap.list.index].name}`, "count": ap.list.audios.length });
+    });
+
+    ap.on('error', () => {
+        ap.list.remove(ap.list.index);
+        $notify("log", { "text": "Sorry, 音频资源播放出错了..."});
     });
 </script>
 

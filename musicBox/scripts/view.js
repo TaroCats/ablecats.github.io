@@ -140,6 +140,7 @@ const songList = {
               events: {
                 tapped: (sender) => {
                   let i = sender.info;
+                  if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
                   let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
                   player(`if(!i['${i.url}']) ap.list.add([${s}]); `, () => { //$notify(\"test\",{text: i});
                     animateOfthrView(1);
@@ -164,6 +165,7 @@ const songList = {
               events: {
                 tapped: (sender) => {
                   let i = sender.info;
+                  if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
                   let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
                   player(`if(!i['${i.url}']) ap.list.add([${s}]);`, () => {
                     player("for (const d of ap.list.audios) {i[d.url] = true;};");
@@ -391,10 +393,10 @@ const thrView = {
   events: {
     log: (res) => {
       c = res.count;
-      animateOflogView(`正在播放： ${res.text}`);
+      animateOflogView(res.text);
     },
     test: (object) => {
-      console.log(object.text)
+      console.log(object.text);
     }
   }
 };
@@ -411,7 +413,7 @@ async function makeDate(page) {
 
   let data = deal(res.data);
   $("songList").endFetchingMore();
-  $("songList").data = history.search == $("input").text && history.platform == $("filter").info ? $("songList").data.concat(data) : data;
+  $("songList").data = history.search == $("input").text && history.platform == $("filter").info && page ? $("songList").data.concat(data) : data;
 };
 
 function deal(data) {
@@ -430,13 +432,9 @@ function deal(data) {
       },
       play: {
         info: item,
-        alpha: item.url ? 1 : 0.4,
-        userInteractionEnabled: item.url ? 1 : 0
       },
       addList: {
         info: item,
-        alpha: item.url ? 1 : 0.4,
-        userInteractionEnabled: item.url ? 1 : 0
       },
       player: item
     };
@@ -450,7 +448,6 @@ function player(script, handle) {
 }
 function animateOflogView(log) {
   $("log").text = log;
-  let h = $device.info.screen.height;
   $("logView").animator
     .moveY(-20).makeOpacity(1)
     .thenAfter(1.0).wait(1.2)
