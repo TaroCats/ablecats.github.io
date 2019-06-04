@@ -11,21 +11,6 @@ async function checkVersion() {
     return res.data
 }
 
-async function update() {
-    let log = await checkLog();
-    let res = await checkVersion();
-
-    if ($file.exists("Version")) {
-        let fileData = $file.read("Version");
-        if (fileData.string) {
-            let file = JSON.parse(fileData.string);
-            console.log(`New Update Check : ${file.md5 != res.data}`);
-            if (file.md5 != res.data) foundNewVer(log);
-        }
-    }
-    else writeMD5(res.data)
-}
-
 function writeMD5(text) {
     $file.write({
         data: $data({ "string": JSON.stringify({ "md5": text }, null, 2) }),
@@ -198,6 +183,21 @@ function date() {
     return new Date().getTime();
 }
 
+(async () => {
+    let log = await checkLog();
+    let res = await checkVersion();
+
+    if ($file.exists("Version")) {
+        let fileData = $file.read("Version");
+        if (fileData.string) {
+            let file = JSON.parse(fileData.string);
+            console.log(`New Update Check : ${file.md5 != res.data}`);
+            if (file.md5 != res.data) foundNewVer(log);
+        }
+    }
+    else writeMD5(res.data)
+})()
+
 module.exports = {
-    update: update,
+    
 };

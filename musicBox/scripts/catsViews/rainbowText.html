@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    p {
+        font-size: 100vh;
+        font-family: Helvetica Neue;
+        font-weight: normal;
+        color: white;
+        background-image: linear-gradient( to right,
+        orangered,
+        orange,
+        gold,
+        lightgreen,
+        cyan,
+        dodgerblue,
+        mediumpurple,
+        hotpink,
+        orangered);
+        /*注意颜色的始终要相同,不然就回有突变颜色线条,影响视觉 */
+        background-size: 110vw;
+        color: transparent;
+        -webkit-background-clip: text;
+        animation: sliding 30s linear infinite;
+    }
+
+    @keyframes sliding {
+        to {
+            background-position: +2000vw;
+        }
+    }
+</style>
+
+<body>
+    <p>rainbow</p>
+</body>
+
+</html>
