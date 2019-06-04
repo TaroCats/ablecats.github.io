@@ -1,10 +1,11 @@
 let c = 0;
 let env = $app.env;
-let app = require("./app.js");
 let phone = $device.isIphoneX;
 let platform = ["qq", "netease", "kugou", "kuwo", "xiami"];
 
-let cv = require("./catsViews/UIViews.js");
+let app = require("./app.js");
+let lottie = require("./lottie.js");
+let catsViews = require("./catsViews/UIViews.js");
 
 const filter = {
   type: "matrix",
@@ -64,135 +65,143 @@ const filter = {
     }
   }
 };
+
 const songList = {
-  type: "matrix",
+  type: "view",
   props: {
-    alpha: 1,
-    columns: 1,
-    spacing: 5,
-    selectable: 0,
-    id: "songList",
-    itemHeight: 110,
-    scrollEnabled: 1,
-    bgcolor: $color("clear"),
-    showsVerticalIndicator: 0,
-    template: {
-      props: {
-        radius: 0
-      },
-      views: [
-        {
-          type: "view",
-          props: {
-            id: "canTouch",
-            bgcolor: $rgba(192, 192, 192, 0.3)
-          },
-          views: [
-            {
-              type: "image",
-              props: {
-                id: "pic",
-                bgcolor: $color("gray")
-              },
-              layout: (make, view) => {
-                make.top.left.inset(0);
-                make.size.equalTo($size(100, 100));
-              }
-            },
-            {
-              type: "label",
-              props: {
-                id: "title",
-                font: $font("bold", 15),
-                align: $align.left,
-                textColor: $color("gray")
-              },
-              layout: (make, view) => {
-                make.height.equalTo(20);
-                make.top.right.inset(10);
-                make.left.equalTo(view.prev.right).offset(10);
-              }
-            },
-            {
-              type: "label",
-              props: {
-                id: "author",
-                font: $font(12),
-                align: $align.left,
-                textColor: $color("gray")
-              },
-              layout: (make, view) => {
-                make.height.equalTo(20);
-                make.left.equalTo(view.prev);
-                make.top.equalTo(view.prev.bottom).offset(5);
-              }
-            },
-            {
-              type: "image",
-              props: {
-                id: "play",
-                bgcolor: $color("clear"),
-                icon: $icon("049", $color("gray"), $size(20, 20))
-              },
-              layout: (make, view) => {
-                make.bottom.right.inset(10);
-              },
-              events: {
-                tapped: (sender) => {
-                  let i = sender.info;
-                  if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
-                  let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
-                  player(`if(!i['${i.url}']) ap.list.add([${s}]); `, () => { //$notify(\"test\",{text: i});
-                    animateOfthrView(1);
-                    $("bgimage").src = i.pic;
-                    player("ap.list.switch(ap.list.audios.length-1);ap.play();");
-                    player("for (const d of ap.list.audios) {i[d.url] = true;};");
-                  });
-                }
-              }
-            },
-            {
-              type: "image",
-              props: {
-                id: "addList",
-                bgcolor: $color("clear"),
-                icon: $icon("104", $color("gray"), $size(20, 20))
-              },
-              layout: (make, view) => {
-                make.bottom.inset(10);
-                make.right.equalTo(view.prev.left).offset(-10);
-              },
-              events: {
-                tapped: (sender) => {
-                  let i = sender.info;
-                  if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
-                  let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
-                  player(`if(!i['${i.url}']) ap.list.add([${s}]);`, () => {
-                    player("for (const d of ap.list.audios) {i[d.url] = true;};");
-                  });
-                }
-              }
-            },
-          ],
-          layout: (make, view) => {
-            make.height.equalTo(90);
-            make.top.left.right.inset(5);
-          }
-        }
-      ]
-    }
+    id: "songListView",
   },
   layout: (make, view) => {
     make.left.right.inset(10);
     make.top.inset(phone ? 90 : 60);
     make.bottom.inset(phone ? 50 : 40);
   },
-  events: {
-    didReachBottom: async (sender) => {
-      let count = sender.data.length;
-      if (count % 10 == 0) await makeDate((count / 10) + 1);
+  views: [{
+    type: "matrix",
+    props: {
+      alpha: 1,
+      columns: 1,
+      spacing: 5,
+      selectable: 0,
+      id: "songList",
+      itemHeight: 110,
+      scrollEnabled: 1,
+      bgcolor: $color("clear"),
+      showsVerticalIndicator: 0,
+      template: {
+        props: {
+          radius: 0
+        },
+        views: [
+          {
+            type: "view",
+            props: {
+              id: "canTouch",
+              bgcolor: $rgba(192, 192, 192, 0.3)
+            },
+            views: [
+              {
+                type: "image",
+                props: {
+                  id: "pic",
+                  bgcolor: $color("gray")
+                },
+                layout: (make, view) => {
+                  make.top.left.inset(0);
+                  make.size.equalTo($size(100, 100));
+                }
+              },
+              {
+                type: "label",
+                props: {
+                  id: "title",
+                  font: $font("bold", 15),
+                  align: $align.left,
+                  textColor: $color("gray")
+                },
+                layout: (make, view) => {
+                  make.height.equalTo(20);
+                  make.top.right.inset(10);
+                  make.left.equalTo(view.prev.right).offset(10);
+                }
+              },
+              {
+                type: "label",
+                props: {
+                  id: "author",
+                  font: $font(12),
+                  align: $align.left,
+                  textColor: $color("gray")
+                },
+                layout: (make, view) => {
+                  make.height.equalTo(20);
+                  make.left.equalTo(view.prev);
+                  make.top.equalTo(view.prev.bottom).offset(5);
+                }
+              },
+              {
+                type: "image",
+                props: {
+                  id: "play",
+                  bgcolor: $color("clear"),
+                  icon: $icon("049", $color("gray"), $size(20, 20))
+                },
+                layout: (make, view) => {
+                  make.bottom.right.inset(10);
+                },
+                events: {
+                  tapped: (sender) => {
+                    let i = sender.info;
+                    if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
+                    let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
+                    player(`if(!i['${i.url}']) ap.list.add([${s}]); `, () => { //$notify(\"test\",{text: i});
+                      animateOfthrView(1);
+                      $("bgimage").src = i.pic;
+                      player("ap.list.switch(ap.list.audios.length-1);ap.play();");
+                      player("for (const d of ap.list.audios) {i[d.url] = true;};");
+                    });
+                  }
+                }
+              },
+              {
+                type: "image",
+                props: {
+                  id: "addList",
+                  bgcolor: $color("clear"),
+                  icon: $icon("104", $color("gray"), $size(20, 20))
+                },
+                layout: (make, view) => {
+                  make.bottom.inset(10);
+                  make.right.equalTo(view.prev.left).offset(-10);
+                },
+                events: {
+                  tapped: (sender) => {
+                    let i = sender.info;
+                    if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
+                    let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
+                    player(`if(!i['${i.url}']) ap.list.add([${s}]);`, () => {
+                      player("for (const d of ap.list.audios) {i[d.url] = true;};");
+                    });
+                  }
+                }
+              },
+            ],
+            layout: (make, view) => {
+              make.height.equalTo(90);
+              make.top.left.right.inset(5);
+            }
+          }
+        ]
+      }
+    },
+    layout: $layout.fill,
+    events: {
+      didReachBottom: async (sender) => {
+        let count = sender.data.length;
+        if (count % 10 == 0) await makeDate((count / 10) + 1);
+      }
     }
-  }
+  }]
 };
 const searchBar = {
   type: "view",
@@ -374,6 +383,21 @@ const subView = {
       events: {
         tapped: sender => animateOfthrView()
       }
+    },
+    {
+      type: "lottie",
+      props: {
+        loop: 1,
+        hidden: 1,
+        id: "sign",
+        circular: 1,
+        src: `assets/Lottie/scan.json`
+      },
+      layout: (make, view) => {
+        make.right.inset(20);
+        make.centerY.equalTo(view.prev);
+        make.size.equalTo($size(25, 25));
+      }
     }
   ]
 };
@@ -405,10 +429,13 @@ async function makeDate(page) {
   $("input").blur();
   $("inputDisable").hidden = 1;
   if (!$("input").text && !page) return;
+
+  $("sign").hidden = 0;
   animateOflogView("数据加载中...");
 
   let history = $cache.get("history");
-  $("input").text = $("input").text ? $("input").text : history.search
+  if (!history) history = { search: null, platform: null };
+  $("input").text = $("input").text ? $("input").text : history.search;
   let res = await app.api($("filter").info, page ? page : 1, $("input").text, "name");
 
   let data = deal(res.data);
@@ -417,6 +444,8 @@ async function makeDate(page) {
 };
 
 function deal(data) {
+  lottie.lottieStop();
+  $("sign").hidden = 1;
   animateOflogView("数据加载完成...");
   $cache.set("history", { search: $("input").text, platform: $("filter").info });
   return data.map(item => {
@@ -516,6 +545,8 @@ if (env == $env.app) (async () => {
   });
   $cache.remove("history");
   $delay(0.3, () => {
+    $("sign").play();
     animateOflogView("初始化完成!");
+    lottie.addLottie("songListView", "scan", "Supported by AbleCats", 0, 1, $layout.fill);
   });
 })();
