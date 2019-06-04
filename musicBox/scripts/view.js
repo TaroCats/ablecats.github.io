@@ -408,12 +408,12 @@ async function makeDate(page) {
 
   let data = deal(res.data);
   $("songList").endFetchingMore();
-  $("songList").data = history == $("input").text ? $("songList").data.concat(data) : data;
+  $("songList").data = history.search == $("input").text && history.platform == $("filter").info ? $("songList").data.concat(data) : data;
 };
 
 function deal(data) {
   animateOflogView("数据加载完成...");
-  $cache.set("history", $("input").text);
+  $cache.set("history", { search: $("input").text, platform: $("filter").info });
   return data.map(item => {
     return {
       pic: {
