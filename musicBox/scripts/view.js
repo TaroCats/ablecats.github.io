@@ -152,7 +152,7 @@ const songList = {
                 events: {
                   tapped: (sender) => {
                     let i = sender.info;
-                    if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
+                    if (!i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
                     let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
                     player(`if(!i['${i.url}']) ap.list.add([${s}]); `, () => { //$notify(\"test\",{text: i});
                       animateOfthrView(1);
@@ -177,7 +177,7 @@ const songList = {
                 events: {
                   tapped: (sender) => {
                     let i = sender.info;
-                    if (i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
+                    if (!i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
                     let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
                     player(`if(!i['${i.url}']) ap.list.add([${s}]);`, () => {
                       player("for (const d of ap.list.audios) {i[d.url] = true;};");
