@@ -405,7 +405,7 @@ const thrView = {
   type: "web",
   props: {
     id: "player",
-    scrollEnabled: 0,
+    scrollEnabled: false,
     html: $file.read("assets/index.html").string
   },
   layout: (make, view) => {
