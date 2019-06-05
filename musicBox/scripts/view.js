@@ -425,30 +425,13 @@ const thrView = {
   }
 };
 
-async function makeDate(page) {
-  $("input").blur();
-  $("inputDisable").hidden = 1;
-  if (!$("input").text && !page) return;
 
-  $("sign").hidden = 0;
-  animateOflogView("数据加载中...");
-
-  let history = $cache.get("history");
-  if (!history) history = { search: null, platform: null };
-  $("input").text = $("input").text ? $("input").text : history.search;
-  let res = await app.api($("filter").info, page ? page : 1, $("input").text, "name");
-
-  let data = deal(res.data);
-  $("songList").endFetchingMore();
-  $("songList").data = history.search == $("input").text && history.platform == $("filter").info && page ? $("songList").data.concat(data) : data;
-};
-
-function deal(data) {
+function deal(d) {
   lottie.lottieStop();
   $("sign").hidden = 1;
   animateOflogView("数据加载完成...");
   $cache.set("history", { search: $("input").text, platform: $("filter").info });
-  return data.map(item => {
+  return d.map(item => {
     return {
       pic: {
         src: item.pic
@@ -469,14 +452,14 @@ function deal(data) {
     };
   });
 }
-function player(script, handle) {
+function player(s, h) {
   $("player").eval({
-    script: script,
-    handler: handle ? handle : () => { }
+    script: s,
+    handler: h ? h : () => { }
   });
 }
-function animateOflogView(log) {
-  $("log").text = log;
+function animateOflogView(t) {
+  $("log").text = t;
   $("logView").animator
     .moveY(-20).makeOpacity(1)
     .thenAfter(1.0).wait(1.2)
@@ -519,13 +502,13 @@ function animateOfSearchBar(s) {
       }
     });
 }
-function viewsAddShadows(view, size) {
+function viewsAddShadows(v, s) {
   //在layout中使用即可 给Views添加阴影
-  var layer = view.runtimeValue().invoke("layer");
+  var layer = v.runtimeValue().invoke("layer");
   layer.invoke("setShadowRadius", 10);
   layer.invoke("setCornerRadius", 10);
   layer.invoke("setShadowOpacity", 0.3);
-  layer.invoke("setShadowOffset", size);
+  layer.invoke("setShadowOffset", s);
   layer.invoke(
     "setShadowColor",
     $color("gray")
@@ -533,6 +516,24 @@ function viewsAddShadows(view, size) {
       .invoke("CGColor")
   );
 }
+
+async function makeDate(page) {
+  $("input").blur();
+  $("inputDisable").hidden = 1;
+  if (!$("input").text && !page) return;
+
+  $("sign").hidden = 0;
+  animateOflogView("数据加载中...");
+
+  let history = $cache.get("history");
+  if (!history) history = { search: null, platform: null };
+  $("input").text = $("input").text ? $("input").text : history.search;
+  let res = await app.api($("filter").info, page ? page : 1, $("input").text, "name");
+
+  let data = deal(res.data);
+  $("songList").endFetchingMore();
+  $("songList").data = history.search == $("input").text && history.platform == $("filter").info && page ? $("songList").data.concat(data) : data;
+};
 
 if (env == $env.app) (async () => {
   $ui.render({
