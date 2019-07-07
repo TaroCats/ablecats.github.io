@@ -2,7 +2,7 @@
 This is the Repo for the AbleCats release resource
 
 #### GitHub [下载脚本](http://t.cn/E9XJMaX)
-#### musicBox [下载脚本](https://xteko.com/redir?name=musicBox&url=https%3A%2F%2Fraw.githubusercontent.com%2FAbleCats%2Fablecats.github.io%2Fmaster%2FReleases%2FmusicBox.box&icon=icon_049)
+
 
 ## There is more to come...  
 
