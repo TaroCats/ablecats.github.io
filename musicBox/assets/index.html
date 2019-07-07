@@ -28,12 +28,29 @@
         lrcType: 1,
     });
     ap.on('play', () => {
+        var xmlhttp;
+        if (window.XMLHttpRequest) {
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+            xmlhttp = new XMLHttpRequest();
+        }
+        else {
+            // IE6, IE5 浏览器执行代码
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                ap.lrc.current = xmlhttp.responseText;
+            }
+        }
+        xmlhttp.open("GET", ap.list.audios[ap.list.index]);
+        xmlhttp.send();
+        $notify("text", { "text": ap.list.audios[ap.list.index].lrc });
         $notify("log", { "text": `正在播放： ${ap.list.audios[ap.list.index].name}`, "count": ap.list.audios.length });
     });
 
     ap.on('error', () => {
         ap.list.remove(ap.list.index);
-        $notify("log", { "text": "Sorry, 音频资源播放出错了..."});
+        $notify("log", { "text": "Sorry, 音频资源播放出错了..." });
     });
 </script>
 

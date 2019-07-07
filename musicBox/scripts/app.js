@@ -1,19 +1,18 @@
-async function api(type, page, input, filter) {
-  console.log(input);
+async function api(plat, page, word) {
   let res = await $http.request({
     method: "POST",
-    url: "http://www.jbsou.cn/",
+    url: "http://192.168.50.2:3000/search",
     header: {
       "X-Requested-With": "XMLHttpRequest",
       "Content-Type": "application/x-www-form-urlencoded"
     },
     body: {
-      type: type, //qq wy _
+      plat: plat, //qq wy _
       page: page,
-      input: input,
-      filter: filter //id url name
+      word: word,
     }
   });
+  console.log(res.data)
   return res.data;
 }
 

@@ -1,7 +1,7 @@
 let c = 0;
 let env = $app.env;
 let phone = $device.isIphoneX;
-let platform = ["qq", "netease", "kugou", "kuwo", "xiami"];
+let platform = ["tencent", "netease", "kugou", "kuwo", "migu"];
 
 let app = require("./app.js");
 let lottie = require("./lottie.js");
@@ -45,7 +45,7 @@ const filter = {
         }
       ]
     },
-    data: ["腾讯", "网易", "酷狗", "酷我", "虾米"].map(item => {
+    data: ["腾讯", "网易", "酷狗", "酷我", "咪咕"].map(item => {
       return {
         label: {
           text: "" + item
@@ -150,10 +150,12 @@ const songList = {
                   make.bottom.right.inset(10);
                 },
                 events: {
-                  tapped: (sender) => {
+                  tapped: async (sender) => {
                     let i = sender.info;
                     if (!i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
-                    let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
+                    //let lrc = await $http.get(i.lrc);
+                    //console.log(JSON.stringify(i.lrc))
+                    let s = `{url: '${i.url}&uuid=2333', name: '${i.name}',artist: '${i.singer}',cover: '${i.pic}',lrc: '${i.lrc}'}`;
                     player(`if(!i['${i.url}']) ap.list.add([${s}]); `, () => { //$notify(\"test\",{text: i});
                       animateOfthrView(1);
                       $("bgimage").src = i.pic;
@@ -178,7 +180,7 @@ const songList = {
                   tapped: (sender) => {
                     let i = sender.info;
                     if (!i.url) { animateOflogView("Sorry, 未找到音频资源..."); return; };
-                    let s = `{url: '${i.url}', name: '${i.title}',artist: '${i.author}',cover: '${i.pic}',lrc: ${JSON.stringify(i.lrc)}}`;
+                    let s = `{url: '${i.url}&uuid=2333', name: '${i.name}',artist: '${i.singer}',cover: '${i.pic}',lrc: ${i.lrc}}`;
                     player(`if(!i['${i.url}']) ap.list.add([${s}]);`, () => {
                       player("for (const d of ap.list.audios) {i[d.url] = true;};");
                     });
@@ -437,10 +439,10 @@ function deal(d) {
         src: item.pic
       },
       title: {
-        text: item.title
+        text: item.name
       },
       author: {
-        text: item.author
+        text: item.singer
       },
       play: {
         info: item,
