@@ -1,0 +1,3 @@
+
+RULE-SET,https://raw.githubusercontent.com/AbleCats/qq-music-api/master/docs/proxy.list,Proxy
+RULE-SET,https://raw.githubusercontent.com/AbleCats/qq-music-api/master/docs/reject.list,AdBlock
