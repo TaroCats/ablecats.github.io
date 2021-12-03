@@ -16,12 +16,12 @@ const rules = [{
     reg: /^http(s)?:\/\/(www\.)?zhihu\.com\/(question\/\d+|tardis\/\w+)/i,
     remove: [
       '.RichContent--unescapable.is-collapsed .ContentItem-rightButton',
-      '.sgui-slide-down', 
-      'AdvertImg',
-      'ModalWrap',
+      '.sgui-slide-down',
+      'AdvertImg', 
+      'ModalWrap', 
       'Banner-adTag',
       'MHotFeedAd',
-      'OpenInAppButton',
+      'OpenInAppButton', 
       'AdBelowMoreAnswers',
       'MobileAppHeader-downloadLink'
     ],
@@ -41,7 +41,21 @@ const rules = [{
         -webkit-mask-image: none !important;
         mask-image: none !important;
       }
-    `
+    `,
+    script: () => {
+      displayList = [
+        'AdvertImg', 
+        'ModalWrap', 
+        'Banner-adTag',
+        'MHotFeedAd',
+        'OpenInAppButton', 
+        'AdBelowMoreAnswers',
+        'MobileAppHeader-downloadLink' 
+      ];
+      displayList.map(v => {
+        GM_displayElement(v);
+      })
+    },
   },
   {
     // CSDN 博客 - PC & 移动端页面
