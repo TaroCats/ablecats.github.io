@@ -14,7 +14,17 @@ let GM_displayElement = (className) => {
 const rules = [{
     // 知乎 - 移动端页面
     reg: /^http(s)?:\/\/(www\.)?zhihu\.com\/(question\/\d+|tardis\/\w+)/i,
-    remove: ['.RichContent--unescapable.is-collapsed .ContentItem-rightButton', '.sgui-slide-down'],
+    remove: [
+      '.RichContent--unescapable.is-collapsed .ContentItem-rightButton',
+      '.sgui-slide-down', 
+      'AdvertImg',
+      'ModalWrap',
+      'Banner-adTag',
+      'MHotFeedAd',
+      'OpenInAppButton',
+      'AdBelowMoreAnswers',
+      'MobileAppHeader-downloadLink'
+    ],
     content: [
       '.Body--Mobile .RichContent.is-collapsed .RichContent-inner',
       '.RichContent--unescapable.is-collapsed .RichContent-inner',
@@ -31,21 +41,7 @@ const rules = [{
         -webkit-mask-image: none !important;
         mask-image: none !important;
       }
-    `,
-    script: () => {
-      displayList = [
-        'AdvertImg', 
-        'ModalWrap', 
-        'Banner-adTag',
-        'MHotFeedAd',
-        'OpenInAppButton', 
-        'AdBelowMoreAnswers',
-        'MobileAppHeader-downloadLink'
-      ];
-      displayList.map(v => {
-        GM_displayElement(v);
-      })
-    },
+    `
   },
   {
     // CSDN 博客 - PC & 移动端页面
